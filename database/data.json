@@ -1,0 +1,197 @@
+{
+  "users": {
+    "6288279268363@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6289670347209@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6288296339947@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "unlimited"
+    },
+    "6285894207947@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6289512545999@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "unlimited"
+    },
+    "6282114680993@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6282158910417@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "628817839722@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6282193252764@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6281364738043@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6289636113562@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6282114651186@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6282136086450@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6285771629311@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6283128555829@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "6285702296958@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "100"
+    },
+    "62895329715990@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "unlimited"
+    },
+    "628126915328@s.whatsapp.net": {
+      "afkTime": -1,
+      "afkReason": "",
+      "limit": "unlimited"
+    }
+  },
+  "chats": {
+    "6289512545999-1626621137@g.us": {
+      "mute": false,
+      "antilink": true
+    },
+    "6289670347209@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6288296339947@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6289512545999-1634962276@g.us": {
+      "mute": false,
+      "antilink": true
+    },
+    "120363044011435611@g.us": {
+      "mute": false,
+      "antilink": true
+    },
+    "628817839722@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6288279268363@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6282193252764@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6281364738043@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6289512545999@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6289636113562@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6282114651186@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6282136086450@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "6283128555829@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "62895329715990@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    },
+    "628126915328@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
+    }
+  },
+  "database": {},
+  "game": {
+    "tebaklagu": [],
+    "family100": [],
+    "math": [],
+    "tebakgambar": [],
+    "tebakkata": [],
+    "lontong": [],
+    "lontong_desk": [],
+    "kalimat": [],
+    "lirik": [],
+    "tebakan": []
+  },
+  "settings": {
+    "6288296339947@s.whatsapp.net": {
+      "status": 1668067866934,
+      "autobio": true,
+      "templateImage": true,
+      "templateVideo": false,
+      "templateGif": false,
+      "templateMsg": false,
+      "templateLocation": false
+    },
+    "62895329715990@s.whatsapp.net": {
+      "status": 1673218700192,
+      "autobio": true,
+      "templateImage": true,
+      "templateVideo": false,
+      "templateGif": false,
+      "templateMsg": false,
+      "templateLocation": false
+    }
+  },
+  "others": {
+    "vote": []
+  },
+  "sticker": {}
+}
