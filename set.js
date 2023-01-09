@@ -10,8 +10,8 @@ global.APIKeys = {
 }
 
 // Other
-global.apikey = ['danzz'] // Get in: https://danzzapi.xyz
-global.apikeyprem = ['danzzprem'] // Get in: https://danzzapi.xyz
+global.apikey = [''] // Get in: https://danzzapi.xyz
+global.apikeyprem = [''] // Get in: https://danzzapi.xyz
 global.apikeyvip = ['YOUR APIKEY'] // Get in: https://danzzapi.xyz
 global.namabot = ['Ahmuq Bot']
 global.namaowner = ['Ahlul Mukhramin']
@@ -42,7 +42,7 @@ global.limitawal = {
 	free: "100",
         premium: "unlimited"
 }
-global.thumb = fs.readFileSync('./media/img/1.jpg')
+global.thumb = fs.readFileSync('./media/img/1.png')
 global.qris = { url: 'https://telegra.ph/file/052a898e9741a8738f71e.jpg' }
 
 let file = require.resolve(__filename)

@@ -1,5 +1,5 @@
 {
-  "name": "danzz-mdv1",
+  "name": "mybot",
   "version": "1.0.0",
   "description": "My Project",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "Whatsapp bot using node.js",
     "By Danzz Coding"
   ],
-  "author": "DanzzCoding",
+  "author": "Ahlul Mukhramin",
   "license": "MIT",
   "dependencies": {
     "@adiwajshing/baileys": "^4.2.0",
@@ -55,10 +55,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Danzzxcodes/new-MD.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Danzzxcodes/new-MD/issues"
-  },
-  "homepage": "https://github.com/Danzzxcodes/new-MD#readme"
+    "url": "git+https://github.com/ahlulmukh/bot-whatsapp.git"
+  }
 }

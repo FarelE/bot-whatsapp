@@ -108,28 +108,28 @@ if (global.db) setInterval(async () => {
   
 // Start
 async function startDanzz() {
-console.log(color(figlet.textSync('danzz Botz', {
+console.log(color(figlet.textSync('Ahmuq', {
 		font: 'Small',
 		horizontalLayout: 'default',
 		vertivalLayout: 'default',
 	    width: 90,
 		whitespaceBreak: true
         }), `${randomcolor}`))
-	console.log(color(`${spc2}           [ Created by: Danzz Coding ]` ,`${randomcolor}`))
+	console.log(color(`${spc2}           [ Created by: Ahlul Mukhramin ]` ,`${randomcolor}`))
 	console.log(color(`${spc4}                       < =============================== >`, `${randomcolor}`))
 	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Hai         : i.m ${namabot}`, `${randomcolor}`))
 	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Bot Version : 1.0.0`, `${randomcolor}`))
 	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Library     : Baileys Multi Device`, `${randomcolor}`))
 	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Status      : Online!`, `${randomcolor}`))
 	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Owner       : ${namaowner}`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Author      : Danzz Coding`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Base Ori By : Danzz Coding`, `${randomcolor}`))
+	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Author      : Ahlul Mukhramin`, `${randomcolor}`))
+	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Base Ori By : Ahlul Mukhramin`, `${randomcolor}`))
 	console.log(color(`${spc4}                       < =============================== >`, `${randomcolor}`))
 	let { version, isLatest } = await fetchLatestBaileysVersion()
     const danzz = WaConnect({
         logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
-        browser: ['Danzz Bot','Chrome','3.0.0'],
+        browser: ['Ahmuq','Chrome','3.0.0'],
         auth: state,
         version
     })
