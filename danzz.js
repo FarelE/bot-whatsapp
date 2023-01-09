@@ -791,7 +791,7 @@ let tag = `
                     {buttonId: `owner`, buttonText: {displayText: 'Owner'}, type: 1}
                 ]
                 let buttonMessage = {
-                    image: { url: 'https://telegra.ph/file/6d3a9d6f88c9d5bbb0330.jpg' },
+                    image: { url: './media/img/1.png' },
                     caption: `${tqto}`,
                     footer: `${tag}\n\n${global.wm}`,
                     buttons: buttons,
@@ -817,7 +817,7 @@ Sanksi : *Warn/Soft Block*
                     {buttonId: `tqto`, buttonText: {displayText: 'Thanks To'}, type: 1}
                 ]
                 let buttonMessage = {
-                    image: { url: 'https://telegra.ph/file/6d3a9d6f88c9d5bbb0330.jpg' },
+                    image: { url: './media/img/1.png' },
                     caption: `${rules}`,
                     footer: `${rulesnya}\n\n${global.wm}`,
                     buttons: buttons,
@@ -842,7 +842,7 @@ let buttons = [
                     {buttonId: `owner`, buttonText: {displayText: 'Owner'}, type: 1}
                 ]
                 let buttonMessage = {
-                    image: { url: 'https://telegra.ph/file/6d3a9d6f88c9d5bbb0330.jpg' },
+                    image: { url: './media/img/1.png' },
                     caption: `${payment}`,
                     footer: `${donate}\n\n${global.wm}`,
                     buttons: buttons,
