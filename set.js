@@ -33,7 +33,7 @@ global.mess = {
     group: 'Fitur Khusus Group Chat',
     private: 'Fitur Khusus Private Chat!',
     bot: 'Fitur Khusus Nomor Bot',
-    wait: 'Waittt...',
+    wait: 'Tunggu ya ..., sticker sedang dalam proses...',
     notregist: 'Kamu belum terdaftar di database bot silahkan daftar terlebih dahulu',
     premium: 'Kamu Bukan User Premium, Beli Sana Ke Owner Bot',
     endLimit: 'Limit Harian Anda Telah Habis, Limit Akan Direset Setiap Pukul 00:00 WIB.',

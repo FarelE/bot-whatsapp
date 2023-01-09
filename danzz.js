@@ -37,10 +37,10 @@ const hariini = timeZone.tz('Asia/Jakarta').format('dddd, DD MMMM YYYY')
 const barat = timeZone.tz('Asia/Jakarta').format('HH:mm:ss')
 const tengah = timeZone.tz('Asia/Makassar').format('HH:mm:ss')
 const timur = timeZone.tz('Asia/Jayapura').format('HH:mm:ss')
-const youtube = ('https://youtube.com/c/DanzzCoding')
+const youtube = ('https://youtube.com/c/ahmuq')
 const wa = `0@s.whatsapp.net`
 const owner = global.owner + '@s.whatsapp.net'
-const nyoutube = ('danzz') 
+const nyoutube = ('muq') 
 var time = timeZone.tz('Asia/Jakarta')
 .format('HH:mm:ss')
 
@@ -200,25 +200,6 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
             console.error(err)
         }
 
-        let argsLog = (budy.length > 30) ? `${q.substring(0, 30)}...` : budy
-
-        // Setting Open AI
-        if (setting.autoAI) {
-            // Push Message To Console && Auto Read
-            if (argsLog && !m.isGroup) {
-            // client.sendReadReceipt(m.chat, m.sender, [m.key.id])
-            console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
-            } else if (argsLog && m.isGroup) {
-            // client.sendReadReceipt(m.chat, m.sender, [m.key.id])
-            console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`), chalk.blueBright('IN'), chalk.green(groupName))
-            }
-        } else if (!setting.autoAI) {
-            if (isCmd && !m.isGroup) {
-                console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`))
-                } else if (isCmd && m.isGroup) {
-                console.log(chalk.black(chalk.bgWhite('[ LOGS ]')), color(argsLog, 'turquoise'), chalk.magenta('From'), chalk.green(pushname), chalk.yellow(`[ ${m.sender.replace('@s.whatsapp.net', '')} ]`), chalk.blueBright('IN'), chalk.green(groupName))
-                }
-        }
 
         if (setting.autoAI) {
             if (budy) {
@@ -712,14 +693,9 @@ ${symbol1} ${prefix}statistic
 ${symbol1} ${prefix}ping
 ${symbol1} ${prefix}testspeed
 
-*DATABASE*
-${symbol1} ${prefix}totalhit
-${symbol1} ${prefix}checklimit
-
 *FEATURES*
-*OpenAI Bot*
+*OPEN AI BOT*
 ${symbol1} ${prefix}ai [text]
-
 
 *GROUP*
 ${symbol1} ${prefix}linkgroup 
@@ -748,8 +724,6 @@ ${symbol1} ${prefix}hapusvote
 ${symbol1} ${prefix}sticker [image] 
 ${symbol1} ${prefix}stickergif [gif] 
 ${symbol1} ${prefix}stickerwm [image] 
-${symbol1} ${prefix}ebinary [text] 
-${symbol1} ${prefix}dbinary [text] 
 ${symbol1} ${prefix}emojimix [emoji1+emoji2] 
 
 *OWNER*
@@ -1438,7 +1412,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
             case 'ai':
                 try {
                     if (setting.keyopenai === 'ISI_APIKEY_OPENAI_DISINI') return reply('Apikey belum diisi\n\nSilahkan isi terlebih dahulu apikeynya di file key.json\n\nApikeynya bisa dibuat di website: https://beta.openai.com/account/api-keys')
-                    if (!text) return reply(`Chattingan dengan.\nTanyakan apa saja kepada ai dengan cara penggunaan \n\n${prefix}${command} tolong berikan motivasi cinta \n\nJangan Lupa follow ig saya @ahlulmukh`)
+                    if (!text) return reply(`Chattingan dengan AI.\nTanyakan apa saja kepada ai dengan cara penggunaan \n\n${prefix}${command} tolong berikan motivasi cinta`)
                     const configuration = new Configuration({
                         apiKey: setting.keyopenai,
                     });
