@@ -24,6 +24,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const { Configuration, OpenAIApi } = require("openai")
 ffmpeg.setFfmpegPath(ffmpegPath);
 let setting = require('./database/key.json');
+var space = require('to-space-case');
 const { performance } = require('perf_hooks')
 const { JSDOM } = require('jsdom')
 const { spawn, exec, execSync } = require("child_process")
@@ -1432,8 +1433,10 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                     console.log(err)
                     m.reply('Maaf, sepertinya ada yang error')
                 }
-                break
-         
+                break   
+            case ' ':   
+            if (!text) return reply(`Chattingan dengan AI.\nTanyakan apa saja kepada ai dengan cara penggunaan \n\n${prefix}${command} tolong berikan motivasi cinta`)
+            break
 		// End Cmd
 		default:
                 if (budy.startsWith('=>')) {

@@ -49,6 +49,7 @@
     "request": "^2.88.2",
     "rimraf": "^1.0.0",
     "steno": "^1.0.0",
+    "to-space-case": "^1.0.0",
     "util": "^0.12.4",
     "yargs": "^17.2.1",
     "yt-search": "^2.10.2"

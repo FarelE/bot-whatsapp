@@ -1,11 +1,4 @@
 require('./set.js')
-
-/**
-* THANKS TO...
-* Adiwajshing (Created Baileys)
-* danzz Coding (My Self)
-*/
-
 const {
 	default:
 	WaConnect,
@@ -115,16 +108,6 @@ console.log(color(figlet.textSync('Ahmuq', {
 	    width: 90,
 		whitespaceBreak: true
         }), `${randomcolor}`))
-	console.log(color(`${spc2}           [ Created by: Ahlul Mukhramin ]` ,`${randomcolor}`))
-	console.log(color(`${spc4}                       < =============================== >`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Hai         : i.m ${namabot}`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Bot Version : 1.0.0`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Library     : Baileys Multi Device`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Status      : Online!`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Owner       : ${namaowner}`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Author      : Ahlul Mukhramin`, `${randomcolor}`))
-	console.log(color(`${spc3}                    [•]`, `${randomcolor}`), color(`Base Ori By : Ahlul Mukhramin`, `${randomcolor}`))
-	console.log(color(`${spc4}                       < =============================== >`, `${randomcolor}`))
 	let { version, isLatest } = await fetchLatestBaileysVersion()
     const danzz = WaConnect({
         logger: pino({ level: 'silent' }),
@@ -135,8 +118,61 @@ console.log(color(figlet.textSync('Ahmuq', {
     })
     
 store.bind(danzz.ev)
+danzz.ev.on("messages.upsert", async ({ messages, type }) => {
+        
+    //console.log(messages);
+    
+    if(type === "notify"){
 
+        if(!messages[0].key.fromMe) {
+
+            //tentukan jenis pesan berbentuk text                
+            const pesan = messages[0].message.conversation;
+
+            //tentukan jenis pesan apakah bentuk list
+            const responseList = messages[0].message.listResponseMessage;
+            
+            //tentukan jenis pesan apakah bentuk button
+            const responseButton = messages[0].message.buttonsResponseMessage;
+
+            //tentukan jenis pesan apakah bentuk templateButtonReplyMessage
+            //const responseReplyButton = messages[0].message.templateButtonReplyMessage;
+            
+            //nowa dari pengirim pesan sebagai id
+            const noWa = messages[0].key.remoteJid;
+
+
+            await danzz.readMessages([messages[0].key]);
+
+            //kecilkan semua pesan yang masuk lowercase 
+            const pesanMasuk = pesan.toLowerCase();
+
+            if(!messages[0].key.fromMe && pesanMasuk === "halo"){
+                await danzz.sendMessage(noWa, {text: "halo juga "},{quoted: messages[0] });
+            }
+            else if(!messages[0].key.fromMe && pesanMasuk === "kamu siapa"){
+                await danzz.sendMessage(noWa, {text: "saya adalah bot yang masih ingin berkembang"},{quoted: messages[0] });
+            }
+            else if (!messages[0].key.fromMe && pesanMasuk === "bot"){
+                await danzz.sendMessage(noWa, {text: "apa sayang"}, {quoted: messages[0]});
+            }
+            else if(!messages[0].key.fromMe && pesanMasuk === "terima kasih"){
+                await danzz.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
+            }
+            else if(!messages[0].key.fromMe && pesanMasuk === "tq"){
+                await danzz.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
+            }
+            else if(!messages[0].key.fromMe && pesanMasuk === "makasih"){
+                await danzz.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
+            }
+            else return
+        }
+
+    }
+
+});    
 danzz.ev.on('messages.upsert', async chatUpdate => {
+
 
         try {
         mek = chatUpdate.messages[0]
