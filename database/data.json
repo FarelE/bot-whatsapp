@@ -88,7 +88,7 @@
     "628126915328@s.whatsapp.net": {
       "afkTime": -1,
       "afkReason": "",
-      "limit": "unlimited"
+      "limit": "100"
     },
     "6282388434460@s.whatsapp.net": {
       "afkTime": -1,
@@ -164,6 +164,14 @@
     "6282388434460@s.whatsapp.net": {
       "mute": false,
       "antilink": true
+    },
+    "120363046468742265@g.us": {
+      "mute": false,
+      "antilink": true
+    },
+    "6282211619727@s.whatsapp.net": {
+      "mute": false,
+      "antilink": true
     }
   },
   "database": {},
@@ -190,7 +198,7 @@
       "templateLocation": false
     },
     "62895329715990@s.whatsapp.net": {
-      "status": 1673497548044,
+      "status": 1673563780813,
       "autobio": true,
       "templateImage": true,
       "templateVideo": false,

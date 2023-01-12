@@ -2,11 +2,11 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 global.APIs = {
-	danzz: 'https://danzzapi.xyz',
+	danzz: '..',
 }
 
 global.APIKeys = {
-	'https://danzzapi.xyz': 'YOUR APIKEY',
+	'..': 'YOUR APIKEY',
 }
 
 // Other

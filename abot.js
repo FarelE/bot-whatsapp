@@ -46,21 +46,7 @@ var time = timeZone.tz('Asia/Jakarta')
 .format('HH:mm:ss')
 
 // read database
-let tebaklagu = db.data.game.tebaklagu = []
-let _family100 = db.data.game.family100 = []
-let kuismath = db.data.game.math = []
-let tebakgambar = db.data.game.tebakgambar = []
-let tebakkata = db.data.game.tebakkata = []
-let caklontong = db.data.game.lontong = []
-let caklontong_desk = db.data.game.lontong_desk = []
-let tebakkalimat = db.data.game.kalimat = []
-let tebaklirik = db.data.game.lirik = []
-let tebaktebakan = db.data.game.tebakan = []
-let vote = db.data.others.vote = []
 let user = JSON.parse(fs.readFileSync('./database/user.json'));
-
-randommp3 = ['males','buatapa','anjing','apa','araara','wataisi','arigatou','mastah']
-const randomaudio = randommp3[Math.floor(Math.random() * (randommp3.length))]
 
 const cekUser = (satu, dua) => { 
 let x1 = false
@@ -97,6 +83,7 @@ module.exports = abot = async (abot, m, store, chatUpdate) => {
         const isImage = (m.quoted ? m.quoted.mtype : m.mtype) == 'imageMessage'
         const pushname = m.pushName || "No Name"
         const botNumber = await abot.decodeJid(abot.user.id)
+        const isCreator = [botNumber, ...global.owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
         const isOwner = [botNumber, ...global.owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
         const myNumber = m.sender == botNumber ? true : false
         const sender = m.isGroup ? (mek.key.participant ? mek.key.participant : mek.participant) : mek.key.remoteJid
@@ -114,28 +101,6 @@ module.exports = abot = async (abot, m, store, chatUpdate) => {
     	const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
     	const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
     	const isPremium = isOwner || global.premium.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || false
-    	const rslot = [
-		'🍊 : 🍒 : 🍐',
-		'🍒 : 🔔 : 🍊',
-		'🍇 : 🍇 : 🍇',
-		'🍊 : 🍋 : 🔔',
-		'🔔 : 🍒 : 🍐',
-		'🔔 : 🍒 : 🍊',
-        '🍊 : 🍋 : 🔔',		
-		'🍐 : 🍒 : 🍋',
-		'🍐 : 🍐 : 🍐',
-		'🍊 : 🍒 : 🍒',
-		'🔔 : 🔔 : 🍇',
-		'🍌 : 🍒 : 🔔',
-		'🍐 : 🔔 : 🔔',
-		'🍊 : 🍋 : 🍒',
-		'🍋 : 🍋 : 🍌',
-		'🔔 : 🔔 : 🍇',
-		'🔔 : 🍐 : 🍇',
-		'🔔 : 🔔 : 🔔  Win',
-		'🍒 : 🍒 : 🍒 Win',
-		'🍌 : 🍌 : 🍌 Lose'
-		]
     
     	// Limit
     	try {
@@ -306,249 +271,7 @@ module.exports = abot = async (abot, m, store, chatUpdate) => {
             abot.readMessages([m.key])
             console.log(chalk.black(chalk.bgGreen('[ Chat ]')), chalk.black(chalk.blueBright(new Date)), chalk.black(chalk.greenBright(budy || m.mtype)) + '\n' + chalk.magentaBright('- from'), chalk.blueBright(pushname), chalk.greenBright(m.sender) + '\n' + chalk.blueBright('- in'), chalk.cyanBright(m.isGroup ? pushname : 'Private Chat', m.chat))
         }
-        
-        // Hit
-        global.hit = {}
-		if (isCmd) {
-		data = await fetchJson('https://api.countapi.xyz/hit/abot-api.herokuapp.com/visitor')
-		totalcmd = `${data.value}`
-		dataa = await fetchJson(`https://api.countapi.xyz/hit/abot${timeZone.tz('Asia/Jakarta').format('DDMMYYYY')}/visits`)
-		hittoday = `${dataa.value}`
-	}
-        
-        if (('family100'+m.chat in _family100) && isCmd) {
-            kuis = true
-            let room = _family100['family100'+m.chat]
-            let teks = budy.toLowerCase().replace(/[^\w\s\-]+/, '')
-            let isSurender = /^((me)?nyerah|surr?ender)$/i.test(m.text)
-            if (!isSurender) {
-                let index = room.jawaban.findIndex(v => v.toLowerCase().replace(/[^\w\s\-]+/, '') === teks)
-                if (room.terjawab[index]) return !0
-                room.terjawab[index] = m.sender
-            }
-            let isWin = room.terjawab.length === room.terjawab.filter(v => v).length
-            let caption = `
-Jawablah Pertanyaan Berikut :\n${room.soal}\n\n\nTerdapat ${room.jawaban.length} Jawaban ${room.jawaban.find(v => v.includes(' ')) ? `(beberapa Jawaban Terdapat Spasi)` : ''}
-${isWin ? `Semua Jawaban Terjawab` : isSurender ? 'Menyerah!' : ''}
-${Array.from(room.jawaban, (jawaban, index) => {
-        return isSurender || room.terjawab[index] ? `(${index + 1}) ${jawaban} ${room.terjawab[index] ? '@' + room.terjawab[index].split('@')[0] : ''}`.trim() : false
-    }).filter(v => v).join('\n')}
-    ${isSurender ? '' : `Perfect Player`}`.trim()
-            abot.sendText(m.chat, caption, m, { contextInfo: { mentionedJid: parseMention(caption) }}).then(mes => { return _family100['family100'+m.chat].pesan = mesg }).catch(_ => _)
-            if (isWin || isSurender) delete _family100['family100'+m.chat]
-        }
 
-        if (tebaklagu.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = tebaklagu[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak lagu', buttonText: { displayText: 'Tebak Lagu' }, type: 1 }], `🎮 Tebak Lagu 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete tebaklagu[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-
-        if (kuismath.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = kuismath[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await m.reply(`🎮 Kuis Matematika  🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? kirim ${prefix}math mode`)
-                delete kuismath[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-
-        if (tebakgambar.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = tebakgambar[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak gambar', buttonText: { displayText: 'Tebak Gambar' }, type: 1 }], `🎮 Tebak Gambar 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete tebakgambar[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-
-        if (tebakkata.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = tebakkata[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak kata', buttonText: { displayText: 'Tebak Kata' }, type: 1 }], `🎮 Tebak Kata 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete tebakkata[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-
-        if (caklontong.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = caklontong[m.sender.split('@')[0]]
-	    deskripsi = caklontong_desk[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak lontong', buttonText: { displayText: 'Tebak Lontong' }, type: 1 }], `🎮 Cak Lontong 🎮\n\nJawaban Benar 🎉\n*${deskripsi}*\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete caklontong[m.sender.split('@')[0]]
-		delete caklontong_desk[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-
-        if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = tebakkalimat[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak kalimat', buttonText: { displayText: 'Tebak Kalimat' }, type: 1 }], `🎮 Tebak Kalimat 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete tebakkalimat[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-
-        if (tebaklirik.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = tebaklirik[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak lirik', buttonText: { displayText: 'Tebak Lirik' }, type: 1 }], `🎮 Tebak Lirik 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete tebaklirik[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-	    
-	if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-            kuis = true
-            jawaban = tebaktebakan[m.sender.split('@')[0]]
-            if (budy.toLowerCase() == jawaban) {
-                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak tebakan', buttonText: { displayText: 'Tebak Tebakan' }, type: 1 }], `🎮 Tebak Tebakan 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
-                delete tebaktebakan[m.sender.split('@')[0]]
-            } else m.reply('*Jawaban Salah!*')
-        }
-        
-        //TicTacToe
-	    this.game = this.game ? this.game : {}
-	    let room = Object.values(this.game).find(room => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender) && room.state == 'PLAYING')
-	    if (room) {
-	    let ok
-	    let isWin = !1
-	    let isTie = !1
-	    let isSurrender = !1
-	    // m.reply(`[DEBUG]\n${parseInt(m.text)}`)
-	    if (!/^([1-9]|(me)?nyerah|surr?ender|off|skip)$/i.test(m.text)) return
-	    isSurrender = !/^[1-9]$/.test(m.text)
-	    if (m.sender !== room.game.currentTurn) { // nek wayahku
-	    if (!isSurrender) return !0
-	    }
-	    if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
-	    m.reply({
-	    '-3': 'Game telah berakhir',
-	    '-2': 'Invalid',
-	    '-1': 'Posisi Invalid',
-	    0: 'Posisi Invalid',
-	    }[ok])
-	    return !0
-	    }
-	    if (m.sender === room.game.winner) isWin = true
-	    else if (room.game.board === 511) isTie = true
-	    let arr = room.game.render().map(v => {
-	    return {
-	    X: '❌',
-	    O: '⭕',
-	    1: '1️⃣',
-	    2: '2️⃣',
-	    3: '3️⃣',
-	    4: '4️⃣',
-	    5: '5️⃣',
-	    6: '6️⃣',
-	    7: '7️⃣',
-	    8: '8️⃣',
-	    9: '9️⃣',
-	    }[v]
-	    })
-	    if (isSurrender) {
-	    room.game._currentTurn = m.sender === room.game.playerX
-	    isWin = true
-	    }
-	    let winner = isSurrender ? room.game.currentTurn : room.game.winner
-	    let str = `Room ID: ${room.id}
-
-${arr.slice(0, 3).join('')}
-${arr.slice(3, 6).join('')}
-${arr.slice(6).join('')}
-
-${isWin ? `@${winner.split('@')[0]} Menang!` : isTie ? `Game berakhir` : `Giliran ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}
-❌: @${room.game.playerX.split('@')[0]}
-⭕: @${room.game.playerO.split('@')[0]}
-
-Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
-	    if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat)
-	    room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = m.chat
-	    if (room.x !== room.o) await abot.sendText(room.x, str, m, { mentions: parseMention(str) } )
-	    await abot.sendText(room.o, str, m, { mentions: parseMention(str) } )
-	    if (isTie || isWin) {
-	    delete this.game[room.id]
-	    }
-	    }
-
-        //Suit PvP
-	    this.suit = this.suit ? this.suit : {}
-	    let roof = Object.values(this.suit).find(roof => roof.id && roof.status && [roof.p, roof.p2].includes(m.sender))
-	    if (roof) {
-	    let win = ''
-	    let tie = false
-	    if (m.sender == roof.p2 && /^(acc(ept)?|terima|gas|oke?|tolak|gamau|nanti|ga(k.)?bisa|y)/i.test(m.text) && m.isGroup && roof.status == 'wait') {
-	    if (/^(tolak|gamau|nanti|n|ga(k.)?bisa)/i.test(m.text)) {
-	    abot.sendTextWithMentions(m.chat, `@${roof.p2.split`@`[0]} menolak suit, suit dibatalkan`, m)
-	    delete this.suit[roof.id]
-	    return !0
-	    }
-	    roof.status = 'play'
-	    roof.asal = m.chat
-	    clearTimeout(roof.waktu)
-	    //delete roof[roof.id].waktu
-	    abot.sendText(m.chat, `Suit telah dikirimkan ke chat
-
-@${roof.p.split`@`[0]} dan 
-@${roof.p2.split`@`[0]}
-
-Silahkan pilih suit di chat masing"
-klik https://wa.me/${botNumber.split`@`[0]}`, m, { mentions: [roof.p, roof.p2] })
-	    if (!roof.pilih) abot.sendText(roof.p, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
-	    if (!roof.pilih2) abot.sendText(roof.p2, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
-	    roof.waktu_milih = setTimeout(() => {
-	    if (!roof.pilih && !roof.pilih2) abot.sendText(m.chat, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
-	    else if (!roof.pilih || !roof.pilih2) {
-	    win = !roof.pilih ? roof.p2 : roof.p
-	    abot.sendTextWithMentions(m.chat, `@${(roof.pilih ? roof.p2 : roof.p).split`@`[0]} tidak memilih suit, game berakhir`, m)
-	    }
-	    delete this.suit[roof.id]
-	    return !0
-	    }, roof.timeout)
-	    }
-	    let jwb = m.sender == roof.p
-	    let jwb2 = m.sender == roof.p2
-	    let g = /gunting/i
-	    let b = /batu/i
-	    let k = /kertas/i
-	    let reg = /^(gunting|batu|kertas)/i
-	    if (jwb && reg.test(m.text) && !roof.pilih && !m.isGroup) {
-	    roof.pilih = reg.exec(m.text.toLowerCase())[0]
-	    roof.text = m.text
-	    m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih2 ? `\n\nMenunggu lawan memilih` : ''}`)
-	    if (!roof.pilih2) abot.sendText(roof.p2, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
-	    }
-	    if (jwb2 && reg.test(m.text) && !roof.pilih2 && !m.isGroup) {
-	    roof.pilih2 = reg.exec(m.text.toLowerCase())[0]
-	    roof.text2 = m.text
-	    m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih ? `\n\nMenunggu lawan memilih` : ''}`)
-	    if (!roof.pilih) abot.sendText(roof.p, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
-	    }
-	    let stage = roof.pilih
-	    let stage2 = roof.pilih2
-	    if (roof.pilih && roof.pilih2) {
-	    clearTimeout(roof.waktu_milih)
-	    if (b.test(stage) && g.test(stage2)) win = roof.p
-	    else if (b.test(stage) && k.test(stage2)) win = roof.p2
-	    else if (g.test(stage) && k.test(stage2)) win = roof.p
-	    else if (g.test(stage) && b.test(stage2)) win = roof.p2
-	    else if (k.test(stage) && b.test(stage2)) win = roof.p
-	    else if (k.test(stage) && g.test(stage2)) win = roof.p2
-	    else if (stage == stage2) tie = true
-	    abot.sendText(roof.asal, `_*Hasil Suit*_${tie ? '\nSERI' : ''}
-
-@${roof.p.split`@`[0]} (${roof.text}) ${tie ? '' : roof.p == win ? ` Menang \n` : ` Kalah \n`}
-@${roof.p2.split`@`[0]} (${roof.text2}) ${tie ? '' : roof.p2 == win ? ` Menang \n` : ` Kalah \n`}
-`.trim(), m, { mentions: [roof.p, roof.p2] })
-	    delete this.suit[roof.id]
-	    }
-	    }
 	    
 	    let mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])]
 	    for (let jid of mentionUser) {
@@ -583,16 +306,7 @@ Selama ${clockString(new Date - user.afkTime)}`)
              
         const ftroli ={key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "status@broadcast"}, "message": {orderMessage: {itemCount: 99999,status: 200, thumbnail: await reSize(thumb, 100, 100), surface: 200, message: `Ahlul`, orderTitle: 'Ahlul', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}
 		const fdoc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {documentMessage: {title: `Ahlul`,jpegThumbnail: await reSize(thumb, 100, 100)}}}
-		const fvn = {key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: { "audioMessage": {"mimetype":"audio/ogg; codecs=opus","seconds":359996400,"ptt": "true"}} } 
-		const ftextt = {key: {fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})}, message: { "extendedTextMessage": {"text":`Ahlul`, "title": `${namabot}`, 'jpegThumbnail': await reSize(thumb, 100, 100)}}}
-        const ftoko = {key: {fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? {remoteJid: "status@broadcast" } : {})}, message: { "productMessage": { "product": { "productImage":{ "mimetype": "image/jpeg", "jpegThumbnail": await reSize(thumb, 100, 100)},"title": `Ahlul`, "description": `${namabot}`, "currencyCode": "IDR", "priceAmount1000": "1000000000000000000", "retailerId": `Ahlul`, "productImageCount": 1}, "businessOwnerJid": `0@s.whatsapp.net`}}} 
-		const fgif = {key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: {"videoMessage": { "title":`Ahlul`, "h": `Hmm`,'seconds': '359996400', 'gifPlayback': 'true', 'caption': `Ahlul`, 'jpegThumbnail': await reSize(thumb, 100, 100)}}}
-		const fgclink = {key: {participant: "0@s.whatsapp.net","remoteJid": "0@s.whatsapp.net"},"message": {"groupInviteMessage": {"groupJid": "6288213840883-1616169743@g.us","inviteCode": "m","groupName": `Ahlul`, "caption": `Ahlul`, 'jpegThumbnail': await reSize(thumb, 100, 100)}}}
-		const fvideo = {key: { fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {}) },message: { "videoMessage": { "title":`Ahlul`, "h": `Hmm`,'seconds': '359996400', 'caption': `Ahlul`, 'jpegThumbnail': await reSize(thumb, 100, 100)}}}
-		const floc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `Ahlul`,jpegThumbnail: await reSize(thumb, 100, 100)}}}
-		const floc2 = {key: { fromMe: false, participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {}) }, message: { "liveLocationMessage": { "title": `Ahlul`,"h": `Hmm`, 'jpegThumbnail': await reSize(thumb, 100, 100)}}}
 		const fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `status@broadcast` } : {}) }, message: { 'contactMessage': { 'displayName': `Ahlul`, 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;ytname,;;;\nFN:ytname\nitem1.TEL;waid=6289512545999:6289512545999\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': await reSize(thumb, 100, 100), thumbnail: await reSize(thumb, 100, 100),sendEphemeral: true}}}
-	    const fakestatus = {key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: { "imageMessage": {"url": "https://mmg.whatsapp.net/d/f/At0x7ZdIvuicfjlf9oWS6A3AR9XPh0P-hZIVPLsI70nM.enc","mimetype": "image/jpeg","caption": `Ahlul`,"fileSha256": "+Ia+Dwib70Y1CWRMAP9QLJKjIJt54fKycOfB2OEZbTU=","fileLength": "28777","height": 1080,"width": 1079,"mediaKey": "vXmRR7ZUeDWjXy5iQk17TrowBzuwRya0errAFnXxbGc=","fileEncSha256": "sR9D2RS5JSifw49HeBADguI23fWDz1aZu4faWG/CyRY=","directPath": "/v/t62.7118-24/21427642_840952686474581_572788076332761430_n.enc?oh=3f57c1ba2fcab95f2c0bb475d72720ba&oe=602F3D69","mediaKeyTimestamp": "1610993486","jpegThumbnail": await reSize(thumb, 100, 100),"scansSidecar": "1W0XhfaAcDwc7xh1R8lca6Qg/1bB4naFCSngM2LKO2NoP5RI7K+zLw=="}}}
 		 
 function pickRandom(list) {
   return list[Math.floor(list.length * Math.random())]
@@ -1359,22 +1073,23 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                 }
             }
             break
-            case 'ebinary': {
-            if (!isPremium) throw mess.premium
-            if (!text) throw `Example : ${prefix + command} text`
-            let { eBinary } = require('./lib/binary')
-            let eb = await eBinary(text)
-            m.reply(eb)
-        }
-        break
-            case 'dbinary': {
-            if (!isPremium) throw mess.premium
-            if (!text) throw `Example : ${prefix + command} text`
-            let { dBinary } = require('./lib/binary')
-            let db = await dBinary(text)
-            m.reply(db)
-        }
-        break
+            case 'smeme': case 'stickmeme': case 'stikmeme': case 'stickermeme': case 'stikermeme': {
+                if (!text) throw `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`
+                m.reply(mess.wait)
+                if (/image/.test(mime)) {
+                    atas = text.split('|')[0] ? text.split('|')[0] : '-'
+                    bawah = text.split('|')[1] ? text.split('|')[1] : '-'
+                    let { TelegraPh } = require('./lib/uploader')
+                    let mee = await abot.downloadAndSaveMediaMessage(qmsg)
+                    let mem = await TelegraPh(mee)
+                    let smeme = `https://api.memegen.link/images/custom/${encodeURIComponent(atas)}/${encodeURIComponent(bawah)}.png?background=${mem}`
+                    let awikwok = await abot.sendImageAsSticker(m.chat, smeme, m, { packname: global.packname, author: global.author })
+                    await fs.unlinkSync(awikwok)
+                } else {
+                    throw `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik`
+                }
+                }
+               break     
             case 'emojimix': {
 		let [emoji1, emoji2] = text.split`+`
 		if (!emoji1) throw `Example : ${prefix + command} 😅+🤔`
