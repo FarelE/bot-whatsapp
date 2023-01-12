@@ -100,7 +100,7 @@ if (global.db) setInterval(async () => {
   }, 30 * 1000)
   
 // Start
-async function startDanzz() {
+async function startAbot() {
 console.log(color(figlet.textSync('Ahmuq', {
 		font: 'Small',
 		horizontalLayout: 'default',
@@ -109,7 +109,7 @@ console.log(color(figlet.textSync('Ahmuq', {
 		whitespaceBreak: true
         }), `${randomcolor}`))
 	let { version, isLatest } = await fetchLatestBaileysVersion()
-    const danzz = WaConnect({
+    const abot = WaConnect({
         logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
         browser: ['Ahmuq','Chrome','3.0.0'],
@@ -117,53 +117,44 @@ console.log(color(figlet.textSync('Ahmuq', {
         version
     })
     
-store.bind(danzz.ev)
-danzz.ev.on("messages.upsert", async ({ messages, type }) => {
-        
-    //console.log(messages);
-    
+store.bind(abot.ev)
+abot.ev.on("messages.upsert", async ({ messages, type }) => {         
     if(type === "notify"){
-
         if(!messages[0].key.fromMe) {
-
             //tentukan jenis pesan berbentuk text                
             const pesan = messages[0].message.conversation;
-
             //tentukan jenis pesan apakah bentuk list
-            const responseList = messages[0].message.listResponseMessage;
-            
+            const responseList = messages[0].message.listResponseMessage;        
             //tentukan jenis pesan apakah bentuk button
             const responseButton = messages[0].message.buttonsResponseMessage;
-
             //tentukan jenis pesan apakah bentuk templateButtonReplyMessage
-            //const responseReplyButton = messages[0].message.templateButtonReplyMessage;
-            
+            //const responseReplyButton = messages[0].message.templateButtonReplyMessage;     
             //nowa dari pengirim pesan sebagai id
             const noWa = messages[0].key.remoteJid;
 
 
-            await danzz.readMessages([messages[0].key]);
+            await abot.readMessages([messages[0].key]);
 
             //kecilkan semua pesan yang masuk lowercase 
             const pesanMasuk = pesan.toLowerCase();
 
             if(!messages[0].key.fromMe && pesanMasuk === "halo"){
-                await danzz.sendMessage(noWa, {text: "halo juga "},{quoted: messages[0] });
+                await abot.sendMessage(noWa, {text: "halo juga "},{quoted: messages[0] });
             }
             else if(!messages[0].key.fromMe && pesanMasuk === "kamu siapa"){
-                await danzz.sendMessage(noWa, {text: "saya adalah bot yang masih ingin berkembang"},{quoted: messages[0] });
+                await abot.sendMessage(noWa, {text: "saya adalah bot yang masih ingin berkembang"},{quoted: messages[0] });
             }
             else if (!messages[0].key.fromMe && pesanMasuk === "bot"){
-                await danzz.sendMessage(noWa, {text: "apa sayang"}, {quoted: messages[0]});
+                await abot.sendMessage(noWa, {text: "apa sayang"}, {quoted: messages[0]});
             }
             else if(!messages[0].key.fromMe && pesanMasuk === "terima kasih"){
-                await danzz.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
+                await abot.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
             }
             else if(!messages[0].key.fromMe && pesanMasuk === "tq"){
-                await danzz.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
+                await abot.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
             }
             else if(!messages[0].key.fromMe && pesanMasuk === "makasih"){
-                await danzz.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
+                await abot.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
             }
             else return
         }
@@ -171,7 +162,7 @@ danzz.ev.on("messages.upsert", async ({ messages, type }) => {
     }
 
 });    
-danzz.ev.on('messages.upsert', async chatUpdate => {
+abot.ev.on('messages.upsert', async chatUpdate => {
 
 
         try {
@@ -179,38 +170,38 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
         if (!mek.message) return
         mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
         if (mek.key && mek.key.remoteJid === 'status@broadcast') return
-        if (!danzz.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
+        if (!abot.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
         if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
-        m = smsg(danzz, mek, store)
-        require("./danzz.js")(danzz, m, chatUpdate, store)
+        m = smsg(abot, mek, store)
+        require("./abot.js")(abot, m, chatUpdate, store)
         } catch (err) {
             console.log(err)
         }
     })
     
 // Group Update
-    danzz.ev.on('groups.update', async pea => {
+    abot.ev.on('groups.update', async pea => {
     
 //console.log
     try {
     for(let dani of pea) {
     // Get Profile Picture Group
        try {
-       ppgc = await danzz.profilePictureUrl(dani.id, 'image')
+       ppgc = await abot.profilePictureUrl(dani.id, 'image')
        } catch {
        ppgc = 'https://tinyurl.com/yx93l6da'
        }
        let dani_gz = { url : ppgc }
        if (dani.announce == true) {
-       danzz.send5ButImg(dani.id, `「 Group Settings Change 」\n\nGroup telah ditutup oleh admin, Sekarang hanya admin yang dapat mengirim pesan !`, `Group Settings Change Message`, dani_gz, [])
+       abot.send5ButImg(dani.id, `「 Group Settings Change 」\n\nGroup telah ditutup oleh admin, Sekarang hanya admin yang dapat mengirim pesan !`, `Group Settings Change Message`, dani_gz, [])
        } else if (dani.announce == false) {
-       danzz.send5ButImg(dani.id, `「 Group Settings Change 」\n\nGroup telah dibuka oleh admin, Sekarang peserta dapat mengirim pesan !`, `Group Settings Change Message`, dani_gz, [])
+       abot.send5ButImg(dani.id, `「 Group Settings Change 」\n\nGroup telah dibuka oleh admin, Sekarang peserta dapat mengirim pesan !`, `Group Settings Change Message`, dani_gz, [])
        } else if (dani.restrict == true) {
-       danzz.send5ButImg(dani.id, `「 Group Settings Change 」\n\nInfo group telah dibatasi, Sekarang hanya admin yang dapat mengedit info group !`, `Group Settings Change Message`, dani_gz, [])
+       abot.send5ButImg(dani.id, `「 Group Settings Change 」\n\nInfo group telah dibatasi, Sekarang hanya admin yang dapat mengedit info group !`, `Group Settings Change Message`, dani_gz, [])
        } else if (dani.restrict == false) {
-       danzz.send5ButImg(dani.id, `「 Group Settings Change 」\n\nInfo group telah dibuka, Sekarang peserta dapat mengedit info group !`, `Group Settings Change Message`, dani_gz, [])
+       abot.send5ButImg(dani.id, `「 Group Settings Change 」\n\nInfo group telah dibuka, Sekarang peserta dapat mengedit info group !`, `Group Settings Change Message`, dani_gz, [])
        } else {
-       danzz.send5ButImg(dani.id, `「 Group Settings Change 」\n\nGroup Subject telah diganti menjadi *${dani.subject}*`, `Group Settings Change Message`, dani_gz, [])
+       abot.send5ButImg(dani.id, `「 Group Settings Change 」\n\nGroup Subject telah diganti menjadi *${dani.subject}*`, `Group Settings Change Message`, dani_gz, [])
      }
     }
     } catch (err){
@@ -218,34 +209,34 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
     }
     })
 
-    danzz.ev.on('group-participants.update', async (anu) => {
+    abot.ev.on('group-participants.update', async (anu) => {
         console.log(anu)
         try {
-            let metadata = await danzz.groupMetadata(anu.id)
+            let metadata = await abot.groupMetadata(anu.id)
             let participants = anu.participants
             for (let num of participants) {
                 // Get Profile Picture User
                 try {
-                    ppuser = await danzz.profilePictureUrl(num, 'image')
+                    ppuser = await abot.profilePictureUrl(num, 'image')
                 } catch {
                     ppuser = 'https://tinyurl.com/yx93l6da'
                 }
 
                 // Get Profile Picture Group
                 try {
-                    ppgroup = await danzz.profilePictureUrl(anu.id, 'image')
+                    ppgroup = await abot.profilePictureUrl(anu.id, 'image')
                 } catch {
                     ppgroup = 'https://tinyurl.com/yx93l6da'
                 }
 
                 if (anu.action == 'add') {
-                    danzz.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Hai Kak👋 @${num.split("@")[0]}\nSelamat Datang Di Grup ${metadata.subject}\n\n*INTRO*\n- Nama:\n- Umur:\n- Askot:\n\nJangan Lupa Baca Deskripsi Ya Kak` })
+                    abot.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Hai Kak👋 @${num.split("@")[0]}\nSelamat Datang Di Grup ${metadata.subject}\n\n*INTRO*\n- Nama:\n- Umur:\n- Askot:\n\nJangan Lupa Baca Deskripsi Ya Kak` })
                 } else if (anu.action == 'remove') {
-                    danzz.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Selamat Tinggal👋 @${num.split("@")[0]}\nKeluar Dari Grup ${metadata.subject}\n\nKalo Balik Lagi Bawa Gorengan Yo:v` })
+                    abot.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Selamat Tinggal👋 @${num.split("@")[0]}\nKeluar Dari Grup ${metadata.subject}\n\nKalo Balik Lagi Bawa Gorengan Yo:v` })
                 } else if (anu.action == 'promote') {
-                    danzz.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Promote From ${metadata.subject}` })
+                    abot.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Promote From ${metadata.subject}` })
                 } else if (anu.action == 'demote') {
-                    danzz.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Demote From ${metadata.subject}` })
+                    abot.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Demote From ${metadata.subject}` })
               }
             }
         } catch (err) {
@@ -253,7 +244,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
         }
     })
 	
-    danzz.decodeJid = (jid) => {
+    abot.decodeJid = (jid) => {
         if (!jid) return jid
         if (/:\d+@/gi.test(jid)) {
             let decode = jidDecode(jid) || {}
@@ -261,44 +252,44 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
         } else return jid
     }
     
-    danzz.ev.on('contacts.update', update => {
+    abot.ev.on('contacts.update', update => {
         for (let contact of update) {
-            let id = danzz.decodeJid(contact.id)
+            let id = abot.decodeJid(contact.id)
             if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
         }
     })
 
-    danzz.getName = (jid, withoutContact  = false) => {
-        id = danzz.decodeJid(jid)
-        withoutContact = danzz.withoutContact || withoutContact 
+    abot.getName = (jid, withoutContact  = false) => {
+        id = abot.decodeJid(jid)
+        withoutContact = abot.withoutContact || withoutContact 
         let v
         if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
             v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = danzz.groupMetadata(id) || {}
+            if (!(v.name || v.subject)) v = abot.groupMetadata(id) || {}
             resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
         })
         else v = id === '0@s.whatsapp.net' ? {
             id,
             name: 'WhatsApp'
-        } : id === danzz.decodeJid(danzz.user.id) ?
-            danzz.user :
+        } : id === abot.decodeJid(abot.user.id) ?
+            abot.user :
             (store.contacts[id] || {})
             return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     }
     
-    danzz.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+    abot.sendContact = async (jid, kon, quoted = '', opts = {}) => {
 	let list = []
 	for (let i of kon) {
 	    list.push({
-	    	displayName: await danzz.getName(i + '@s.whatsapp.net'),
-	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await danzz.getName(i + '@s.whatsapp.net')}\nFN:${await danzz.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem4.ADR:;;Indonesia;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
+	    	displayName: await abot.getName(i + '@s.whatsapp.net'),
+	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await abot.getName(i + '@s.whatsapp.net')}\nFN:${await abot.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem4.ADR:;;Indonesia;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
 	    })
 	}
-	danzz.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
+	abot.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
     }
     
-    danzz.setStatus = (status) => {
-        danzz.query({
+    abot.setStatus = (status) => {
+        abot.query({
             tag: 'iq',
             attrs: {
                 to: '@s.whatsapp.net',
@@ -314,27 +305,27 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
         return status
     }
 	
-    danzz.public = true
+    abot.public = true
 
-    danzz.serializeM = (m) => smsg(danzz, m, store)
+    abot.serializeM = (m) => smsg(abot, m, store)
 
-    danzz.ev.on('connection.update', async (update) => {
+    abot.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update	    
         if (connection === 'close') {
         let reason = new Boom(lastDisconnect?.error)?.output.statusCode
-            if (reason === DisconnectReason.badSession) { console.log(`Bad Session File, Please Delete Session and Scan Again`); danzz.logout(); }
-            else if (reason === DisconnectReason.connectionClosed) { console.log("Connection closed, reconnecting...."); startDanzz(); }
-            else if (reason === DisconnectReason.connectionLost) { console.log("Connection Lost from Server, reconnecting..."); startDanzz(); }
-            else if (reason === DisconnectReason.connectionReplaced) { console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); danzz.logout(); }
-            else if (reason === DisconnectReason.loggedOut) { console.log(`Device Logged Out, Please Scan Again And Run.`); danzz.logout(); }
-            else if (reason === DisconnectReason.restartRequired) { console.log("Restart Required, Restarting..."); startDanzz(); }
-            else if (reason === DisconnectReason.timedOut) { console.log("Connection TimedOut, Reconnecting..."); startDanzz(); }
-            else danzz.end(`Unknown DisconnectReason: ${reason}|${connection}`)
+            if (reason === DisconnectReason.badSession) { console.log(`Bad Session File, Please Delete Session and Scan Again`); abot.logout(); }
+            else if (reason === DisconnectReason.connectionClosed) { console.log("Connection closed, reconnecting...."); startAbot(); }
+            else if (reason === DisconnectReason.connectionLost) { console.log("Connection Lost from Server, reconnecting..."); startAbot(); }
+            else if (reason === DisconnectReason.connectionReplaced) { console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); abot.logout(); }
+            else if (reason === DisconnectReason.loggedOut) { console.log(`Device Logged Out, Please Scan Again And Run.`); abot.logout(); }
+            else if (reason === DisconnectReason.restartRequired) { console.log("Restart Required, Restarting..."); startAbot(); }
+            else if (reason === DisconnectReason.timedOut) { console.log("Connection TimedOut, Reconnecting..."); startAbot(); }
+            else abot.end(`Unknown DisconnectReason: ${reason}|${connection}`)
         }
         console.log('Connected...', update)
     })
 
-    danzz.ev.on('creds.update', saveState)
+    abot.ev.on('creds.update', saveState)
 
     // Add Other
       
@@ -344,7 +335,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
       * @param {Numeric} Width
       * @param {Numeric} Height
       */
-      danzz.reSize = async (image, width, height) => {
+      abot.reSize = async (image, width, height) => {
        let jimp = require('jimp')
        var oyy = await jimp.read(image);
        var kiyomasa = await oyy.resize(width, height).getBufferAsync(jimp.MIME_JPEG)
@@ -360,8 +351,8 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
        * @param [*] button
        * @param {*} options
        */
-      danzz.send5ButLoc = async (jid , text = '' , footer = '', lok, but = [], options = {}) =>{
-       let resize = await danzz.reSize(lok, 300, 150)
+      abot.send5ButLoc = async (jid , text = '' , footer = '', lok, but = [], options = {}) =>{
+       let resize = await abot.reSize(lok, 300, 150)
        var template = generateWAMessageFromContent(jid, {
        "templateMessage": {
        "hydratedTemplate": {
@@ -376,7 +367,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
        }
        }
        }, options)
-       danzz.relayMessage(jid, template.message, { messageId: template.key.id })
+       abot.relayMessage(jid, template.message, { messageId: template.key.id })
       }
 
       /**
@@ -387,25 +378,25 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
       * @param {*} quoted
       * @param {*} options
       */
-     danzz.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
+     abot.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
       let mime = '';
       let res = await axios.head(url)
       mime = res.headers['content-type']
       if (mime.split("/")[1] === "gif") {
-     return danzz.sendMessage(jid, { video: await getBuffer(url), caption: caption, gifPlayback: true, ...options}, { quoted: quoted, ...options})
+     return abot.sendMessage(jid, { video: await getBuffer(url), caption: caption, gifPlayback: true, ...options}, { quoted: quoted, ...options})
       }
       let type = mime.split("/")[0]+"Message"
       if(mime === "application/pdf"){
-     return danzz.sendMessage(jid, { document: await getBuffer(url), mimetype: 'application/pdf', caption: caption, ...options}, { quoted: quoted, ...options })
+     return abot.sendMessage(jid, { document: await getBuffer(url), mimetype: 'application/pdf', caption: caption, ...options}, { quoted: quoted, ...options })
       }
       if(mime.split("/")[0] === "image"){
-     return danzz.sendMessage(jid, { image: await getBuffer(url), caption: caption, ...options}, { quoted: quoted, ...options})
+     return abot.sendMessage(jid, { image: await getBuffer(url), caption: caption, ...options}, { quoted: quoted, ...options})
       }
       if(mime.split("/")[0] === "video"){
-     return danzz.sendMessage(jid, { video: await getBuffer(url), caption: caption, mimetype: 'video/mp4', ...options}, { quoted: quoted, ...options })
+     return abot.sendMessage(jid, { video: await getBuffer(url), caption: caption, mimetype: 'video/mp4', ...options}, { quoted: quoted, ...options })
       }
       if(mime.split("/")[0] === "audio"){
-     return danzz.sendMessage(jid, { audio: await getBuffer(url), caption: caption, mimetype: 'audio/mpeg', ...options}, { quoted: quoted, ...options })
+     return abot.sendMessage(jid, { audio: await getBuffer(url), caption: caption, mimetype: 'audio/mpeg', ...options}, { quoted: quoted, ...options })
       }
       }
 
@@ -419,7 +410,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
       *@param [*] sections
       *@param {*} quoted
       */
-        danzz.sendListMsg = (jid, text = '', footer = '', title = '' , butText = '', sects = [], quoted) => {
+        abot.sendListMsg = (jid, text = '', footer = '', title = '' , butText = '', sects = [], quoted) => {
         let sections = sects
         var listMes = {
         text: text,
@@ -428,7 +419,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
         buttonText: butText,
         sections
         }
-        danzz.sendMessage(jid, listMes, { quoted: quoted })
+        abot.sendMessage(jid, listMes, { quoted: quoted })
         }
 
     /** Send Button 5 Message
@@ -439,14 +430,14 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} button
      * @returns 
      */
-        danzz.send5ButMsg = (jid, text = '' , footer = '', but = []) =>{
+        abot.send5ButMsg = (jid, text = '' , footer = '', but = []) =>{
         let templateButtons = but
         var templateMessage = {
         text: text,
         footer: footer,
         templateButtons: templateButtons
         }
-        danzz.sendMessage(jid, templateMessage)
+        abot.sendMessage(jid, templateMessage)
         }
 
     /** Send Button 5 Image
@@ -459,9 +450,9 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options
      * @returns
      */
-    danzz.send5ButImg = async (jid , text = '' , footer = '', img, but = [], buff, options = {}) =>{
-        let resize = await danzz.reSize(buff, 300, 150)
-        let message = await prepareWAMessageMedia({ image: img, jpegThumbnail: resize }, { upload: danzz.waUploadToServer })
+    abot.send5ButImg = async (jid , text = '' , footer = '', img, but = [], buff, options = {}) =>{
+        let resize = await abot.reSize(buff, 300, 150)
+        let message = await prepareWAMessageMedia({ image: img, jpegThumbnail: resize }, { upload: abot.waUploadToServer })
         var template = generateWAMessageFromContent(jid, proto.Message.fromObject({
         templateMessage: {
         hydratedTemplate: {
@@ -472,7 +463,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
             }
             }
             }), options)
-            danzz.relayMessage(jid, template.message, { messageId: template.key.id })
+            abot.relayMessage(jid, template.message, { messageId: template.key.id })
     }
 
     /** Send Button 5 Video
@@ -485,9 +476,9 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options
      * @returns
      */
-    danzz.send5ButVid = async (jid , text = '' , footer = '', vid, but = [], buff, options = {}) =>{
-        let resize = await danzz.reSize(buff, 300, 150)
-        let message = await prepareWAMessageMedia({ video: vid, jpegThumbnail: resize }, { upload: danzz.waUploadToServer })
+    abot.send5ButVid = async (jid , text = '' , footer = '', vid, but = [], buff, options = {}) =>{
+        let resize = await abot.reSize(buff, 300, 150)
+        let message = await prepareWAMessageMedia({ video: vid, jpegThumbnail: resize }, { upload: abot.waUploadToServer })
         var template = generateWAMessageFromContent(jid, proto.Message.fromObject({
         templateMessage: {
         hydratedTemplate: {
@@ -498,7 +489,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
             }
             }
             }), options)
-            danzz.relayMessage(jid, template.message, { messageId: template.key.id })
+            abot.relayMessage(jid, template.message, { messageId: template.key.id })
     }
 
     /** Send Button 5 Gif
@@ -511,11 +502,11 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options
      * @returns
      */
-    danzz.send5ButGif = async (jid , text = '' , footer = '', gif, but = [], buff, options = {}) =>{
-        let resize = await danzz.reSize(buff, 300, 150)
+    abot.send5ButGif = async (jid , text = '' , footer = '', gif, but = [], buff, options = {}) =>{
+        let resize = await abot.reSize(buff, 300, 150)
         let a = [1,2]
         let b = a[Math.floor(Math.random() * a.length)]
-        let message = await prepareWAMessageMedia({ video: gif, gifPlayback: true, jpegThumbnail: resize, gifAttribution: b}, { upload: danzz.waUploadToServer })
+        let message = await prepareWAMessageMedia({ video: gif, gifPlayback: true, jpegThumbnail: resize, gifAttribution: b}, { upload: abot.waUploadToServer })
         var template = generateWAMessageFromContent(jid, proto.Message.fromObject({
         templateMessage: {
         hydratedTemplate: {
@@ -526,7 +517,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
             }
             }
             }), options)
-            danzz.relayMessage(jid, template.message, { messageId: template.key.id })
+            abot.relayMessage(jid, template.message, { messageId: template.key.id })
     }
 
     /**
@@ -538,7 +529,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} quoted 
      * @param {*} options 
      */
-    danzz.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
+    abot.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
         let buttonMessage = {
             text,
             footer,
@@ -546,7 +537,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
             headerType: 2,
             ...options
         }
-        danzz.sendMessage(jid, buttonMessage, { quoted, ...options })
+        abot.sendMessage(jid, buttonMessage, { quoted, ...options })
     }
     
     /**
@@ -557,7 +548,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendText = (jid, text, quoted = '', options) => danzz.sendMessage(jid, { text: text, ...options }, { quoted })
+    abot.sendText = (jid, text, quoted = '', options) => abot.sendMessage(jid, { text: text, ...options }, { quoted })
 
     /**
      * 
@@ -568,9 +559,9 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendImage = async (jid, path, caption = '', quoted = '', options) => {
+    abot.sendImage = async (jid, path, caption = '', quoted = '', options) => {
 	let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await danzz.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })
+        return await abot.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })
     }
 
     /**
@@ -582,9 +573,9 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendVideo = async (jid, path, caption = '', quoted = '', gif = false, options) => {
+    abot.sendVideo = async (jid, path, caption = '', quoted = '', gif = false, options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await danzz.sendMessage(jid, { video: buffer, caption: caption, gifPlayback: gif, ...options }, { quoted })
+        return await abot.sendMessage(jid, { video: buffer, caption: caption, gifPlayback: gif, ...options }, { quoted })
     }
 
     /**
@@ -596,9 +587,9 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
+    abot.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await danzz.sendMessage(jid, { audio: buffer, ptt: ptt, ...options }, { quoted })
+        return await abot.sendMessage(jid, { audio: buffer, ptt: ptt, ...options }, { quoted })
     }
 
     /**
@@ -609,7 +600,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendTextWithMentions = async (jid, text, quoted, options = {}) => danzz.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
+    abot.sendTextWithMentions = async (jid, text, quoted, options = {}) => abot.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 
     /**
      * 
@@ -619,7 +610,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+    abot.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
         let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
@@ -628,7 +619,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
             buffer = await imageToWebp(buff)
         }
 
-        await danzz.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+        await abot.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
         return buffer
     }
 
@@ -640,7 +631,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
+    abot.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
         let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
@@ -649,7 +640,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
             buffer = await videoToWebp(buff)
         }
 
-        await danzz.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+        await abot.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
         return buffer
     }
 	
@@ -660,7 +651,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} attachExtension 
      * @returns 
      */
-    danzz.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
+    abot.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
         let quoted = message.msg ? message.msg : message
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
@@ -676,7 +667,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
         return trueFileName
     }
 
-    danzz.downloadMediaMessage = async (message) => {
+    abot.downloadMediaMessage = async (message) => {
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
         const stream = await downloadContentFromMessage(message, messageType)
@@ -698,8 +689,8 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
-        let types = await danzz.getFile(path, true)
+    abot.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
+        let types = await abot.getFile(path, true)
            let { mime, ext, res, data, filename } = types
            if (res && res.status !== 200 || file.length <= 65536) {
                try { throw { json: JSON.parse(file.toString()) } }
@@ -719,7 +710,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
        else if (/video/.test(mime)) type = 'video'
        else if (/audio/.test(mime)) type = 'audio'
        else type = 'document'
-       await danzz.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options })
+       await abot.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options })
        return fs.promises.unlink(pathFile)
        }
 
@@ -731,7 +722,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} options 
      * @returns 
      */
-    danzz.copyNForward = async (jid, message, forceForward = false, options = {}) => {
+    abot.copyNForward = async (jid, message, forceForward = false, options = {}) => {
         let vtype
 		if (options.readViewOnce) {
 			message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
@@ -762,11 +753,11 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
                 }
             } : {})
         } : {})
-        await danzz.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
+        await abot.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
         return waMessage
     }
 
-    danzz.cMod = (jid, copy, text = '', sender = danzz.user.id, options = {}) => {
+    abot.cMod = (jid, copy, text = '', sender = abot.user.id, options = {}) => {
 		let mtype = Object.keys(copy.message)[0]
 		let isEphemeral = mtype === 'ephemeralMessage'
         if (isEphemeral) {
@@ -786,7 +777,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
 		if (copy.key.remoteJid.includes('@s.whatsapp.net')) sender = sender || copy.key.remoteJid
 		else if (copy.key.remoteJid.includes('@broadcast')) sender = sender || copy.key.remoteJid
 		copy.key.remoteJid = jid
-		copy.key.fromMe = sender === danzz.user.id
+		copy.key.fromMe = sender === abot.user.id
 
         return proto.WebMessageInfo.fromObject(copy)
     }
@@ -797,7 +788,7 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
      * @param {*} path 
      * @returns 
      */
-    danzz.getFile = async (PATH, save) => {
+    abot.getFile = async (PATH, save) => {
         let res
         let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)        
         let type = await FileType.fromBuffer(data) || {
@@ -816,10 +807,10 @@ danzz.ev.on('messages.upsert', async chatUpdate => {
 
     }
 
-    return danzz
+    return abot
 }
 
-startDanzz()
+startAbot()
 
 
 let file = require.resolve(__filename)

@@ -77,7 +77,7 @@ if (satu == "registerOn"){ return user[x1].registerOn }
 if (x1 == false) { return null } 
 }
 
-module.exports = danzz = async (danzz, m, store, chatUpdate) => {
+module.exports = abot = async (abot, m, store, chatUpdate) => {
 	try {
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ''
         var budy = (typeof m.text == 'string' ? m.text : '')
@@ -96,7 +96,7 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
         const isVideo = (m.quoted ? m.quoted.mtype : m.mtype) == 'videoMessage'
         const isImage = (m.quoted ? m.quoted.mtype : m.mtype) == 'imageMessage'
         const pushname = m.pushName || "No Name"
-        const botNumber = await danzz.decodeJid(danzz.user.id)
+        const botNumber = await abot.decodeJid(abot.user.id)
         const isOwner = [botNumber, ...global.owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
         const myNumber = m.sender == botNumber ? true : false
         const sender = m.isGroup ? (mek.key.participant ? mek.key.participant : mek.participant) : mek.key.remoteJid
@@ -107,7 +107,7 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
         }
         
         // Group
-        const groupMetadata = m.isGroup ? await danzz.groupMetadata(m.chat).catch(e => {}) : ''
+        const groupMetadata = m.isGroup ? await abot.groupMetadata(m.chat).catch(e => {}) : ''
         const groupName = m.isGroup ? groupMetadata.subject : ''
         const participants = m.isGroup ? await groupMetadata.participants : ''
         const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
@@ -232,14 +232,14 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
         if (db.data.chats[m.chat].antilink) {
         if (budy.match(`chat.whatsapp.com`)) {
         if (!isBotAdmins) return m.reply(`Ehh bot gak admin`)
-        let gclink = (`https://chat.whatsapp.com/`+await danzz.groupInviteCode(m.chat))
+        let gclink = (`https://chat.whatsapp.com/`+await abot.groupInviteCode(m.chat))
         let isLinkThisGc = new RegExp(gclink, 'i')
         let isgclink = isLinkThisGc.test(m.text)
         if (isgclink) return m.reply(`Ngapain Lu Ngirim Link Group Ini?`)
         if (isAdmins) return m.reply(`Admin Mah Bebas Yakan?`)
         if (isOwner) return m.reply(`Owner Bot Mah Bebas Yakan?`)
         m.reply(`[ *ANTI LINK* ]\n\nKamu Terdeteksi Mengirim Link Grup, Kamu Akan Di Kick!!!`)
-        danzz.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+        abot.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
         }
         }
         
@@ -271,7 +271,7 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
 	    let setting = global.db.data.settings[botNumber]
 	    if (new Date() * 1 - setting.status > 1000) {
 		let uptime = await runtime(process.uptime())
-		await danzz.setStatus(`${global.namabot} | Runtime : ${runtime(process.uptime())}`)
+		await abot.setStatus(`${global.namabot} | Runtime : ${runtime(process.uptime())}`)
 		setting.status = new Date() * 1
 	    }
 	}
@@ -281,10 +281,10 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
         let hash = global.db.data.sticker[m.msg.fileSha256.toString('base64')]
         let { text, mentionedJid } = hash
         let messages = await generateWAMessage(m.chat, { text: text, mentions: mentionedJid }, {
-            userJid: danzz.user.id,
+            userJid: abot.user.id,
             quoted: ftroli.quoted && m.quoted.fakeObj
         })
-        messages.key.fromMe = areJidsSameUser(m.sender, danzz.user.id)
+        messages.key.fromMe = areJidsSameUser(m.sender, abot.user.id)
         messages.key.id = m.key.id
         messages.pushName = m.pushName
         if (m.isGroup) messages.participant = m.sender
@@ -293,26 +293,26 @@ module.exports = danzz = async (danzz, m, store, chatUpdate) => {
             messages: [proto.WebMessageInfo.fromObject(messages)],
             type: 'append'
         }
-        danzz.ev.emit('messages.upsert', msg)
+        abot.ev.emit('messages.upsert', msg)
         }
         
         // Public & Self
-        if (!danzz.public) {
+        if (!abot.public) {
             if (!m.key.fromMe) return
         }
 
         // Push Message To Console && Auto Read
         if (m.message) {
-            danzz.readMessages([m.key])
+            abot.readMessages([m.key])
             console.log(chalk.black(chalk.bgGreen('[ Chat ]')), chalk.black(chalk.blueBright(new Date)), chalk.black(chalk.greenBright(budy || m.mtype)) + '\n' + chalk.magentaBright('- from'), chalk.blueBright(pushname), chalk.greenBright(m.sender) + '\n' + chalk.blueBright('- in'), chalk.cyanBright(m.isGroup ? pushname : 'Private Chat', m.chat))
         }
         
         // Hit
         global.hit = {}
 		if (isCmd) {
-		data = await fetchJson('https://api.countapi.xyz/hit/danzz-api.herokuapp.com/visitor')
+		data = await fetchJson('https://api.countapi.xyz/hit/abot-api.herokuapp.com/visitor')
 		totalcmd = `${data.value}`
-		dataa = await fetchJson(`https://api.countapi.xyz/hit/danzz${timeZone.tz('Asia/Jakarta').format('DDMMYYYY')}/visits`)
+		dataa = await fetchJson(`https://api.countapi.xyz/hit/abot${timeZone.tz('Asia/Jakarta').format('DDMMYYYY')}/visits`)
 		hittoday = `${dataa.value}`
 	}
         
@@ -334,7 +334,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
         return isSurender || room.terjawab[index] ? `(${index + 1}) ${jawaban} ${room.terjawab[index] ? '@' + room.terjawab[index].split('@')[0] : ''}`.trim() : false
     }).filter(v => v).join('\n')}
     ${isSurender ? '' : `Perfect Player`}`.trim()
-            danzz.sendText(m.chat, caption, m, { contextInfo: { mentionedJid: parseMention(caption) }}).then(mes => { return _family100['family100'+m.chat].pesan = mesg }).catch(_ => _)
+            abot.sendText(m.chat, caption, m, { contextInfo: { mentionedJid: parseMention(caption) }}).then(mes => { return _family100['family100'+m.chat].pesan = mesg }).catch(_ => _)
             if (isWin || isSurender) delete _family100['family100'+m.chat]
         }
 
@@ -342,7 +342,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             kuis = true
             jawaban = tebaklagu[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak lagu', buttonText: { displayText: 'Tebak Lagu' }, type: 1 }], `🎮 Tebak Lagu 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak lagu', buttonText: { displayText: 'Tebak Lagu' }, type: 1 }], `🎮 Tebak Lagu 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete tebaklagu[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
         }
@@ -360,7 +360,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             kuis = true
             jawaban = tebakgambar[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak gambar', buttonText: { displayText: 'Tebak Gambar' }, type: 1 }], `🎮 Tebak Gambar 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak gambar', buttonText: { displayText: 'Tebak Gambar' }, type: 1 }], `🎮 Tebak Gambar 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete tebakgambar[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
         }
@@ -369,7 +369,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             kuis = true
             jawaban = tebakkata[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak kata', buttonText: { displayText: 'Tebak Kata' }, type: 1 }], `🎮 Tebak Kata 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak kata', buttonText: { displayText: 'Tebak Kata' }, type: 1 }], `🎮 Tebak Kata 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete tebakkata[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
         }
@@ -379,7 +379,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             jawaban = caklontong[m.sender.split('@')[0]]
 	    deskripsi = caklontong_desk[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak lontong', buttonText: { displayText: 'Tebak Lontong' }, type: 1 }], `🎮 Cak Lontong 🎮\n\nJawaban Benar 🎉\n*${deskripsi}*\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak lontong', buttonText: { displayText: 'Tebak Lontong' }, type: 1 }], `🎮 Cak Lontong 🎮\n\nJawaban Benar 🎉\n*${deskripsi}*\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete caklontong[m.sender.split('@')[0]]
 		delete caklontong_desk[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
@@ -389,7 +389,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             kuis = true
             jawaban = tebakkalimat[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak kalimat', buttonText: { displayText: 'Tebak Kalimat' }, type: 1 }], `🎮 Tebak Kalimat 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak kalimat', buttonText: { displayText: 'Tebak Kalimat' }, type: 1 }], `🎮 Tebak Kalimat 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete tebakkalimat[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
         }
@@ -398,7 +398,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             kuis = true
             jawaban = tebaklirik[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak lirik', buttonText: { displayText: 'Tebak Lirik' }, type: 1 }], `🎮 Tebak Lirik 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak lirik', buttonText: { displayText: 'Tebak Lirik' }, type: 1 }], `🎮 Tebak Lirik 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete tebaklirik[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
         }
@@ -407,7 +407,7 @@ ${Array.from(room.jawaban, (jawaban, index) => {
             kuis = true
             jawaban = tebaktebakan[m.sender.split('@')[0]]
             if (budy.toLowerCase() == jawaban) {
-                await danzz.sendButtonText(m.chat, [{ buttonId: 'tebak tebakan', buttonText: { displayText: 'Tebak Tebakan' }, type: 1 }], `🎮 Tebak Tebakan 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, danzz.user.name, m)
+                await abot.sendButtonText(m.chat, [{ buttonId: 'tebak tebakan', buttonText: { displayText: 'Tebak Tebakan' }, type: 1 }], `🎮 Tebak Tebakan 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? tekan button dibawah`, abot.user.name, m)
                 delete tebaktebakan[m.sender.split('@')[0]]
             } else m.reply('*Jawaban Salah!*')
         }
@@ -470,8 +470,8 @@ ${isWin ? `@${winner.split('@')[0]} Menang!` : isTie ? `Game berakhir` : `Gilira
 Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
 	    if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== m.chat)
 	    room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = m.chat
-	    if (room.x !== room.o) await danzz.sendText(room.x, str, m, { mentions: parseMention(str) } )
-	    await danzz.sendText(room.o, str, m, { mentions: parseMention(str) } )
+	    if (room.x !== room.o) await abot.sendText(room.x, str, m, { mentions: parseMention(str) } )
+	    await abot.sendText(room.o, str, m, { mentions: parseMention(str) } )
 	    if (isTie || isWin) {
 	    delete this.game[room.id]
 	    }
@@ -485,7 +485,7 @@ Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
 	    let tie = false
 	    if (m.sender == roof.p2 && /^(acc(ept)?|terima|gas|oke?|tolak|gamau|nanti|ga(k.)?bisa|y)/i.test(m.text) && m.isGroup && roof.status == 'wait') {
 	    if (/^(tolak|gamau|nanti|n|ga(k.)?bisa)/i.test(m.text)) {
-	    danzz.sendTextWithMentions(m.chat, `@${roof.p2.split`@`[0]} menolak suit, suit dibatalkan`, m)
+	    abot.sendTextWithMentions(m.chat, `@${roof.p2.split`@`[0]} menolak suit, suit dibatalkan`, m)
 	    delete this.suit[roof.id]
 	    return !0
 	    }
@@ -493,20 +493,20 @@ Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
 	    roof.asal = m.chat
 	    clearTimeout(roof.waktu)
 	    //delete roof[roof.id].waktu
-	    danzz.sendText(m.chat, `Suit telah dikirimkan ke chat
+	    abot.sendText(m.chat, `Suit telah dikirimkan ke chat
 
 @${roof.p.split`@`[0]} dan 
 @${roof.p2.split`@`[0]}
 
 Silahkan pilih suit di chat masing"
 klik https://wa.me/${botNumber.split`@`[0]}`, m, { mentions: [roof.p, roof.p2] })
-	    if (!roof.pilih) danzz.sendText(roof.p, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
-	    if (!roof.pilih2) danzz.sendText(roof.p2, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
+	    if (!roof.pilih) abot.sendText(roof.p, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
+	    if (!roof.pilih2) abot.sendText(roof.p2, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
 	    roof.waktu_milih = setTimeout(() => {
-	    if (!roof.pilih && !roof.pilih2) danzz.sendText(m.chat, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
+	    if (!roof.pilih && !roof.pilih2) abot.sendText(m.chat, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
 	    else if (!roof.pilih || !roof.pilih2) {
 	    win = !roof.pilih ? roof.p2 : roof.p
-	    danzz.sendTextWithMentions(m.chat, `@${(roof.pilih ? roof.p2 : roof.p).split`@`[0]} tidak memilih suit, game berakhir`, m)
+	    abot.sendTextWithMentions(m.chat, `@${(roof.pilih ? roof.p2 : roof.p).split`@`[0]} tidak memilih suit, game berakhir`, m)
 	    }
 	    delete this.suit[roof.id]
 	    return !0
@@ -522,13 +522,13 @@ klik https://wa.me/${botNumber.split`@`[0]}`, m, { mentions: [roof.p, roof.p2] }
 	    roof.pilih = reg.exec(m.text.toLowerCase())[0]
 	    roof.text = m.text
 	    m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih2 ? `\n\nMenunggu lawan memilih` : ''}`)
-	    if (!roof.pilih2) danzz.sendText(roof.p2, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
+	    if (!roof.pilih2) abot.sendText(roof.p2, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
 	    }
 	    if (jwb2 && reg.test(m.text) && !roof.pilih2 && !m.isGroup) {
 	    roof.pilih2 = reg.exec(m.text.toLowerCase())[0]
 	    roof.text2 = m.text
 	    m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih ? `\n\nMenunggu lawan memilih` : ''}`)
-	    if (!roof.pilih) danzz.sendText(roof.p, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
+	    if (!roof.pilih) abot.sendText(roof.p, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
 	    }
 	    let stage = roof.pilih
 	    let stage2 = roof.pilih2
@@ -541,7 +541,7 @@ klik https://wa.me/${botNumber.split`@`[0]}`, m, { mentions: [roof.p, roof.p2] }
 	    else if (k.test(stage) && b.test(stage2)) win = roof.p
 	    else if (k.test(stage) && g.test(stage2)) win = roof.p2
 	    else if (stage == stage2) tie = true
-	    danzz.sendText(roof.asal, `_*Hasil Suit*_${tie ? '\nSERI' : ''}
+	    abot.sendText(roof.asal, `_*Hasil Suit*_${tie ? '\nSERI' : ''}
 
 @${roof.p.split`@`[0]} (${roof.text}) ${tie ? '' : roof.p == win ? ` Menang \n` : ` Kalah \n`}
 @${roof.p2.split`@`[0]} (${roof.text2}) ${tie ? '' : roof.p2 == win ? ` Menang \n` : ` Kalah \n`}
@@ -566,7 +566,7 @@ Selama ${clockString(new Date - afkTime)}
 
         if (db.data.users[m.sender].afkTime > -1) {
             let user = global.db.data.users[m.sender]
-            danzz.sendTextWithMentions(m.chat, `@${m.sender.split('@')[0]} berhenti AFK${user.afkReason ? ' setelah ' + user.afkReason : ''}
+            abot.sendTextWithMentions(m.chat, `@${m.sender.split('@')[0]} berhenti AFK${user.afkReason ? ' setelah ' + user.afkReason : ''}
 Selama ${clockString(new Date - user.afkTime)}`)
             user.afkTime = -1
             user.afkReason = ''
@@ -613,7 +613,7 @@ let m2 = mm.split("|")[1];
 let m3 = mm.split("|")[2];
 if (m.isGroup) {
 m.reply('🇮🇩 _Bot telah mengirimkan list pendaftaran ke private chat, silahkan selesaikan agar dapat menggunakan fitur bot._\n\n🇺🇸 _The bot has sent a registration list to the private chat, please complete it so you can use the bot feature._')
-if (!m2) return danzz.sendMessage(sender, { text: `🇮🇩 _Hi @${sender.split("@")[0]} silahkan pilih umur kamu dengan cara pencet dibawah ini._\n\n🇺🇸 _Hi @${sender.split("@")[0]} please select your age by pressing the button below._`, footer: `${namabot} © 2022`, buttonText: "Click Here", sections: [{title: "📆Select Your Age Here!!", rows: [{title: "🎰 Random Years", rowId: "#daftar "+pushname+"|"+pickRandom(["5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50",",51","52","53","54","55","56","57","58","59","60"])},{title: "💫60• Years", rowId: "#daftar "+pushname+"|"+"60"},{title: "💫59• Years", rowId: "#daftar "+pushname+"|"+"59"},{title: "💫58• Years", rowId: "#daftar "+pushname+"|"+"58"},{title: "💫57• Years", rowId: "#daftar "+pushname+"|"+"57"},{title: "💫56• Years", rowId: "#daftar "+pushname+"|"+"56"},{title: "💫55• Years", rowId: "#daftar "+pushname+"|"+"56"},{title: "💫54• Years", rowId: "#daftar "+pushname+"|"+"54"},{title: "💫53• Years", rowId: "#daftar "+pushname+"|"+"53"},{title: "💫52• Years", rowId: "#daftar "+pushname+"|"+"52"},{title: "💫51• Years", rowId: "#daftar "+pushname+"|"+"51"},{title: "💫50• Years", rowId: "#daftar "+pushname+"|"+"50"},{title: "💫49• Years", rowId: "#daftar "+pushname+"|"+"49"},{title: "💫48• Years", rowId: "#daftar "+pushname+"|"+"48"},{title: "💫47• Years", rowId: "#daftar "+pushname+"|"+"47"},{title: "💫46• Years", rowId: "#daftar "+pushname+"|"+"46"},{title: "💫45• Years", rowId: "#daftar "+pushname+"|"+"45"},{title: "💫44• Years", rowId: "#daftar "+pushname+"|"+"44"},{title: "💫43• Years", rowId: "#daftar "+pushname+"|"+"43"},{title: "💫42• Years", rowId: "#daftar "+pushname+"|"+"42"},{title: "💫41• Years", rowId: "#daftar "+pushname+"|"+"41"},{title: "💫40• Years", rowId: "#daftar "+pushname+"|"+"40"},{title: "💫39• Years", rowId: "#daftar "+pushname+"|"+"39"},{title: "💫38• Years", rowId: "#daftar "+pushname+"|"+"38"},{title: "💫37• Years", rowId: "#daftar "+pushname+"|"+"37"},{title: "💫36• Years", rowId: "#daftar "+pushname+"|"+"36"},{title: "💫35• Years", rowId: "#daftar "+pushname+"|"+"35"},{title: "💫34• Years", rowId: "#daftar "+pushname+"|"+"34"},{title: "💫33• Years", rowId: "#daftar "+pushname+"|"+"33"},{title: "💫32• Years", rowId: "#daftar "+pushname+"|"+"32"},{title: "💫31• Years", rowId: "#daftar "+pushname+"|"+"31"},{title: "💫30• Years", rowId: "#daftar "+pushname+"|"+"30"},{title: "💫29• Years", rowId: "#daftar "+pushname+"|"+"39"},{title: "💫28• Years", rowId: "#daftar "+pushname+"|"+"28"},{title: "💫27• Years", rowId: "#daftar "+pushname+"|"+"27"},{title: "💫26• Years", rowId: "#daftar "+pushname+"|"+"26"},{title: "💫25• Years", rowId: "#daftar "+pushname+"|"+"25"},{title: "💫24• Years", rowId: "#daftar "+pushname+"|"+"24"},{title: "💫23• Years", rowId: "#daftar "+pushname+"|"+"23"},{title: "💫22• Years", rowId: "#daftar "+pushname+"|"+"22"},{title: "💫21• Years", rowId: "#daftar "+pushname+"|"+"21"},{title: "💫20• Years", rowId: "#daftar "+pushname+"|"+"20"},{title: "💫19• Years", rowId: "#daftar "+pushname+"|"+"19"},{title: "💫18• Years", rowId: "#daftar "+pushname+"|"+"18"},{title: "💫17• Years", rowId: "#daftar "+pushname+"|"+"17"},{title: "💫16• Years", rowId: "#daftar "+pushname+"|"+"16"},{title: "💫15• Years", rowId: "#daftar "+pushname+"|"+"15"},{title: "💫14• Years", rowId: "#daftar "+pushname+"|"+"14"},{title: "💫13• Years", rowId: "#daftar "+pushname+"|"+"13"},{title: "💫12• Years", rowId: "#daftar "+pushname+"|"+"12"},{title: "💫11• Years", rowId: "#daftar "+pushname+"|"+"11"},{title: "💫10• Years", rowId: "#daftar "+pushname+"|"+"10"},{title: "💫9• Years", rowId: "#daftar "+pushname+"|"+"9"},{title: "💫8• Years", rowId: "#daftar "+pushname+"|"+"8"},{title: "💫7• Years", rowId: "#daftar "+pushname+"|"+"7"},{title: "💫6• Years", rowId: "#daftar "+pushname+"|"+"6"},{title: "💫5• Years", rowId: "#daftar "+pushname+"|"+"5"}]}], mentions: [`${sender}`]}, { quoted: ftroli })
+if (!m2) return abot.sendMessage(sender, { text: `🇮🇩 _Hi @${sender.split("@")[0]} silahkan pilih umur kamu dengan cara pencet dibawah ini._\n\n🇺🇸 _Hi @${sender.split("@")[0]} please select your age by pressing the button below._`, footer: `${namabot} © 2022`, buttonText: "Click Here", sections: [{title: "📆Select Your Age Here!!", rows: [{title: "🎰 Random Years", rowId: "#daftar "+pushname+"|"+pickRandom(["5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50",",51","52","53","54","55","56","57","58","59","60"])},{title: "💫60• Years", rowId: "#daftar "+pushname+"|"+"60"},{title: "💫59• Years", rowId: "#daftar "+pushname+"|"+"59"},{title: "💫58• Years", rowId: "#daftar "+pushname+"|"+"58"},{title: "💫57• Years", rowId: "#daftar "+pushname+"|"+"57"},{title: "💫56• Years", rowId: "#daftar "+pushname+"|"+"56"},{title: "💫55• Years", rowId: "#daftar "+pushname+"|"+"56"},{title: "💫54• Years", rowId: "#daftar "+pushname+"|"+"54"},{title: "💫53• Years", rowId: "#daftar "+pushname+"|"+"53"},{title: "💫52• Years", rowId: "#daftar "+pushname+"|"+"52"},{title: "💫51• Years", rowId: "#daftar "+pushname+"|"+"51"},{title: "💫50• Years", rowId: "#daftar "+pushname+"|"+"50"},{title: "💫49• Years", rowId: "#daftar "+pushname+"|"+"49"},{title: "💫48• Years", rowId: "#daftar "+pushname+"|"+"48"},{title: "💫47• Years", rowId: "#daftar "+pushname+"|"+"47"},{title: "💫46• Years", rowId: "#daftar "+pushname+"|"+"46"},{title: "💫45• Years", rowId: "#daftar "+pushname+"|"+"45"},{title: "💫44• Years", rowId: "#daftar "+pushname+"|"+"44"},{title: "💫43• Years", rowId: "#daftar "+pushname+"|"+"43"},{title: "💫42• Years", rowId: "#daftar "+pushname+"|"+"42"},{title: "💫41• Years", rowId: "#daftar "+pushname+"|"+"41"},{title: "💫40• Years", rowId: "#daftar "+pushname+"|"+"40"},{title: "💫39• Years", rowId: "#daftar "+pushname+"|"+"39"},{title: "💫38• Years", rowId: "#daftar "+pushname+"|"+"38"},{title: "💫37• Years", rowId: "#daftar "+pushname+"|"+"37"},{title: "💫36• Years", rowId: "#daftar "+pushname+"|"+"36"},{title: "💫35• Years", rowId: "#daftar "+pushname+"|"+"35"},{title: "💫34• Years", rowId: "#daftar "+pushname+"|"+"34"},{title: "💫33• Years", rowId: "#daftar "+pushname+"|"+"33"},{title: "💫32• Years", rowId: "#daftar "+pushname+"|"+"32"},{title: "💫31• Years", rowId: "#daftar "+pushname+"|"+"31"},{title: "💫30• Years", rowId: "#daftar "+pushname+"|"+"30"},{title: "💫29• Years", rowId: "#daftar "+pushname+"|"+"39"},{title: "💫28• Years", rowId: "#daftar "+pushname+"|"+"28"},{title: "💫27• Years", rowId: "#daftar "+pushname+"|"+"27"},{title: "💫26• Years", rowId: "#daftar "+pushname+"|"+"26"},{title: "💫25• Years", rowId: "#daftar "+pushname+"|"+"25"},{title: "💫24• Years", rowId: "#daftar "+pushname+"|"+"24"},{title: "💫23• Years", rowId: "#daftar "+pushname+"|"+"23"},{title: "💫22• Years", rowId: "#daftar "+pushname+"|"+"22"},{title: "💫21• Years", rowId: "#daftar "+pushname+"|"+"21"},{title: "💫20• Years", rowId: "#daftar "+pushname+"|"+"20"},{title: "💫19• Years", rowId: "#daftar "+pushname+"|"+"19"},{title: "💫18• Years", rowId: "#daftar "+pushname+"|"+"18"},{title: "💫17• Years", rowId: "#daftar "+pushname+"|"+"17"},{title: "💫16• Years", rowId: "#daftar "+pushname+"|"+"16"},{title: "💫15• Years", rowId: "#daftar "+pushname+"|"+"15"},{title: "💫14• Years", rowId: "#daftar "+pushname+"|"+"14"},{title: "💫13• Years", rowId: "#daftar "+pushname+"|"+"13"},{title: "💫12• Years", rowId: "#daftar "+pushname+"|"+"12"},{title: "💫11• Years", rowId: "#daftar "+pushname+"|"+"11"},{title: "💫10• Years", rowId: "#daftar "+pushname+"|"+"10"},{title: "💫9• Years", rowId: "#daftar "+pushname+"|"+"9"},{title: "💫8• Years", rowId: "#daftar "+pushname+"|"+"8"},{title: "💫7• Years", rowId: "#daftar "+pushname+"|"+"7"},{title: "💫6• Years", rowId: "#daftar "+pushname+"|"+"6"},{title: "💫5• Years", rowId: "#daftar "+pushname+"|"+"5"}]}], mentions: [`${sender}`]}, { quoted: ftroli })
 }
 if (!m1) return m.reply(`Ex : ${prefix+command} Nama|umur`)
 if (m1 && !m2 && !m3) {
@@ -624,13 +624,13 @@ if (m1 && m2 && !m3) {
 user.push({id: sender, name: m1, umur: m2})
 fs.writeFileSync('./database/user.json', JSON.stringify(user))
 }
-if (!m3) return danzz.sendMessage(sender, { text: `🇮🇩 _Hi @${sender.split("@")[0]} silahkan pilih jenis kelamin kamu dengan cara pencet dibawah ini._\n\n🇺🇸 _Hi @${sender.split("@")[0]} please select your gender by pressing the button below._`, footer: `${namabot} © 2022`, buttonText: "Click Here", sections: [{title: "♂Select Your Gender Here!!", rows: [{title: "♂ Male / Cowo", rowId: "#daftar "+pushname+"|"+cekUser("umur", sender)+"|"+pickRandom(["Laki-Laki","Cowo","Pria"])},{title: "♀ Female / Cewe", rowId: "#daftar "+pushname+"|"+cekUser("umur", sender)+"|"+pickRandom(["Perempuan","Cewe","Wanita"])}]}], mentions: [`${sender}`]}, { quoted: fkontak })
+if (!m3) return abot.sendMessage(sender, { text: `🇮🇩 _Hi @${sender.split("@")[0]} silahkan pilih jenis kelamin kamu dengan cara pencet dibawah ini._\n\n🇺🇸 _Hi @${sender.split("@")[0]} please select your gender by pressing the button below._`, footer: `${namabot} © 2022`, buttonText: "Click Here", sections: [{title: "♂Select Your Gender Here!!", rows: [{title: "♂ Male / Cowo", rowId: "#daftar "+pushname+"|"+cekUser("umur", sender)+"|"+pickRandom(["Laki-Laki","Cowo","Pria"])},{title: "♀ Female / Cewe", rowId: "#daftar "+pushname+"|"+cekUser("umur", sender)+"|"+pickRandom(["Perempuan","Cewe","Wanita"])}]}], mentions: [`${sender}`]}, { quoted: fkontak })
 if (m1 && m2 && m3) {
 user.push({id: sender, name: m1, umur: m2, gender: m3})
 fs.writeFileSync('./database/user.json', JSON.stringify(user))
 }
 try {
-        ppuser = await danzz.profilePictureUrl(num, 'image')
+        ppuser = await abot.profilePictureUrl(num, 'image')
         } catch {
         ppuser = 'https://tinyurl.com/yx93l6da'
         }
@@ -652,8 +652,8 @@ Silahkan ketik *#rules* sebelum memulai bot.`
 if (m1 && m2 && m3) {
 user.push({id: sender, name: m1, umur: m2, gender: m3, resi: resiNya, registerOn: registerOnNya})
 fs.writeFileSync('./database/user.json', JSON.stringify(user))
-danzz.sendMessage(sender, { text: `*Memuat Data* › @${sender.split('@')[0]}`, mentions: [ `${sender.split('@')[0]}@s.whatsapp.net` ]}, { quoted: m })
-danzz.sendMessage(sender, { image: { url: ppuser }, caption: teks_daftar }, { quoted: m }) 
+abot.sendMessage(sender, { text: `*Memuat Data* › @${sender.split('@')[0]}`, mentions: [ `${sender.split('@')[0]}@s.whatsapp.net` ]}, { quoted: m })
+abot.sendMessage(sender, { image: { url: ppuser }, caption: teks_daftar }, { quoted: m }) 
 }
 }
 break
@@ -671,7 +671,7 @@ Limit: ${isPremium ? 'Unlimited' : `${db.data.users[m.sender].limit}`}
 *INFO BOT*
 Nama Bot: ${global.namabot}
 Owner: @${owner.split('@')[0]}
-Mode: ${danzz.public ? 'Public' : `Self`}
+Mode: ${abot.public ? 'Public' : `Self`}
 Prefix:「 MULTI-PREFIX 」
 
 *TIME*
@@ -743,13 +743,13 @@ ${symbol1} ${prefix}delete (msg) `
                     buttons: buttons,
                     headerType: 3
                 }
-                danzz.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
+                abot.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
         }
         break
             
             // Owner
             case 'author': case 'owner': case 'creator': {
-                danzz.sendContact(m.chat, global.owner, m)
+                abot.sendContact(m.chat, global.owner, m)
             }
             break
             
@@ -772,7 +772,7 @@ let tag = `
                     buttons: buttons,
                     headerType: 4
                 }
-                danzz.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
+                abot.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
         }
         break
         
@@ -798,7 +798,7 @@ Sanksi : *Warn/Soft Block*
                     buttons: buttons,
                     headerType: 4
                 }
-                danzz.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
+                abot.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
         }
         break
            
@@ -823,7 +823,7 @@ let buttons = [
                     buttons: buttons,
                     headerType: 4
                 }
-                danzz.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
+                abot.sendMessage(m.chat, buttonMessage, { quoted: ftroli })
         }
         break
         
@@ -896,7 +896,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
         case 'runtime': case 'tes': {
             	let lowq = `*Bot Telah Online Selama*\n*${runtime(process.uptime())}*`
                 let buttons = [{ buttonId: 'donasi', buttonText: { displayText: 'Donasi' }, type: 1 }]
-                await danzz.sendButtonText(m.chat, buttons, lowq, nyoutube, m, {quoted: fkontak})
+                await abot.sendButtonText(m.chat, buttons, lowq, nyoutube, m, {quoted: fkontak})
             	}
             break
             
@@ -907,9 +907,9 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                let pjtxt = `Pesan Dari : @${me.split('@')[0]} \nUntuk : @${ownernya.split('@')[0]}\n\n${command} ${text}`
                let ments = [ownernya, me]
                let buttons = [{ buttonId: 'hehehe', buttonText: { displayText: 'Thanks' }, type: 1 }]
-            await danzz.sendButtonText(ownernya, buttons, pjtxt, nyoutube, m, {mentions: ments, quoted: fdoc})
+            await abot.sendButtonText(ownernya, buttons, pjtxt, nyoutube, m, {mentions: ments, quoted: fdoc})
             let akhji = `*Request Telah Terkirim*\n*Ke Owner @${ownernya.split('@')[0]}*\n_Terima Kasih🙏_`
-            await danzz.sendButtonText(m.chat, buttons, akhji, nyoutube, m, {mentions: ments, quoted: fkontak})
+            await abot.sendButtonText(m.chat, buttons, akhji, nyoutube, m, {mentions: ments, quoted: fkontak})
             }
             break
             
@@ -937,8 +937,8 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
          case 'linkgroup': case 'linkgc': {
                 if (!m.isGroup) throw mess.group
                 if (!isBotAdmins) throw mess.botAdmin
-                let response = await danzz.groupInviteCode(m.chat)
-                danzz.sendText(m.chat, `https://chat.whatsapp.com/${response}\n\nLink Group : ${groupMetadata.subject}`, m, { detectLink: true })
+                let response = await abot.groupInviteCode(m.chat)
+                abot.sendText(m.chat, `https://chat.whatsapp.com/${response}\n\nLink Group : ${groupMetadata.subject}`, m, { detectLink: true })
             }
             break
             
@@ -947,13 +947,13 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 if (!isBotAdmins) throw mess.botAdmin
                 if (!isAdmins) throw mess.admin
                 if (args[0] === '1') {
-                    await danzz.groupToggleEphemeral(m.chat, 1*24*3600).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+                    await abot.groupToggleEphemeral(m.chat, 1*24*3600).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
                 } else if (args[0] === '7') {
-                    await danzz.groupToggleEphemeral(m.chat, 7*24*3600).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+                    await abot.groupToggleEphemeral(m.chat, 7*24*3600).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
                 } else if (args[0] === '90') {
-                    await danzz.groupToggleEphemeral(m.chat, 90*24*3600).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+                    await abot.groupToggleEphemeral(m.chat, 90*24*3600).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
                 } else if (args[0] === 'off') {
-                    await danzz.groupToggleEphemeral(m.chat, 0).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+                    await abot.groupToggleEphemeral(m.chat, 0).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
                 } else {
                 let sections = [
                 {
@@ -966,7 +966,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 ]
                 },
                 ]
-                danzz.sendListMsg(m.chat, `Please select the following Ephemeral Options List !`, danzz.user.name, `Hello Admin ${groupMetadata.subject}`, `Click Here`, sections, m)
+                abot.sendListMsg(m.chat, `Please select the following Ephemeral Options List !`, abot.user.name, `Hello Admin ${groupMetadata.subject}`, `Click Here`, sections, m)
                 }
             }
             break
@@ -976,8 +976,8 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 if (!isAdmins) throw mess.admin
                 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
                 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                let media = await danzz.downloadAndSaveMediaMessage(qmsg)
-                await danzz.updateProfilePicture(m.chat, { url: media }).catch((err) => fs.unlinkSync(media))
+                let media = await abot.downloadAndSaveMediaMessage(qmsg)
+                await abot.updateProfilePicture(m.chat, { url: media }).catch((err) => fs.unlinkSync(media))
                 m.reply(mess.success)
                 }
                 break
@@ -987,7 +987,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 if (!isBotAdmins) throw mess.botAdmin
                 if (!isAdmins) throw mess.admin
                 if (!text) throw 'Text ?'
-                await danzz.groupUpdateSubject(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
+                await abot.groupUpdateSubject(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
             }
             break
           case 'setdesc': case 'setdesk': {
@@ -995,15 +995,15 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                 if (!isBotAdmins) throw mess.botAdmin
                 if (!isAdmins) throw mess.admin
                 if (!text) throw 'Text ?'
-                await danzz.groupUpdateDescription(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
+                await abot.groupUpdateDescription(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
             }
             break
           case 'setppbot': {
                 if (!isCreator) throw mess.owner
                 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
                 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                let media = await danzz.downloadAndSaveMediaMessage(qmsg)
-                await danzz.updateProfilePicture(botNumber, { url: media }).catch((err) => fs.unlinkSync(media))
+                let media = await abot.downloadAndSaveMediaMessage(qmsg)
+                await abot.updateProfilePicture(botNumber, { url: media }).catch((err) => fs.unlinkSync(media))
                 m.reply(mess.success)
                 }
                 break
@@ -1043,11 +1043,11 @@ let buttonsVote = [
 
             let buttonMessageVote = {
                 text: teks_vote,
-                footer: danzz.user.name,
+                footer: abot.user.name,
                 buttons: buttonsVote,
                 headerType: 1
             }
-            danzz.sendMessage(m.chat, buttonMessageVote)
+            abot.sendMessage(m.chat, buttonMessageVote)
 	    }
             break
                case 'upvote': {
@@ -1084,12 +1084,12 @@ ${vote[m.chat][2].map((v, i) => `├ ${i + 1}. @${v.split`@`[0]}`).join('\n')}
 
             let buttonMessageUpvote = {
                 text: teks_vote,
-                footer: danzz.user.name,
+                footer: abot.user.name,
                 buttons: buttonsUpvote,
                 headerType: 1,
                 mentions: menvote
              }
-            danzz.sendMessage(m.chat, buttonMessageUpvote)
+            abot.sendMessage(m.chat, buttonMessageUpvote)
 	    }
              break
                 case 'devote': {
@@ -1126,12 +1126,12 @@ ${vote[m.chat][2].map((v, i) => `├ ${i + 1}. @${v.split`@`[0]}`).join('\n')}
 
             let buttonMessageDevote = {
                 text: teks_vote,
-                footer: danzz.user.name,
+                footer: abot.user.name,
                 buttons: buttonsDevote,
                 headerType: 1,
                 mentions: menvote
             }
-            danzz.sendMessage(m.chat, buttonMessageDevote)
+            abot.sendMessage(m.chat, buttonMessageDevote)
 	}
             break
                  
@@ -1159,9 +1159,9 @@ ${vote[m.chat][2].map((v, i) => `├ ${i + 1}. @${v.split`@`[0]}`).join('\n')}
 *${prefix}hapusvote* - untuk menghapus vote
 
 
-©${danzz.user.id}
+©${abot.user.id}
 `
-danzz.sendTextWithMentions(m.chat, teks_vote, m)
+abot.sendTextWithMentions(m.chat, teks_vote, m)
 break
 		case 'deletevote': case'delvote': case 'hapusvote': {
             if (!m.isGroup) throw mess.group
@@ -1175,15 +1175,15 @@ break
                 if (!isBotAdmins) throw mess.botAdmin
                 if (!isAdmins) throw mess.admin
                 if (args[0] === 'close'){
-                    await danzz.groupSettingUpdate(m.chat, 'announcement').then((res) => m.reply(`Sukses Menutup Group`)).catch((err) => m.reply(jsonformat(err)))
+                    await abot.groupSettingUpdate(m.chat, 'announcement').then((res) => m.reply(`Sukses Menutup Group`)).catch((err) => m.reply(jsonformat(err)))
                 } else if (args[0] === 'open'){
-                    await danzz.groupSettingUpdate(m.chat, 'not_announcement').then((res) => m.reply(`Sukses Membuka Group`)).catch((err) => m.reply(jsonformat(err)))
+                    await abot.groupSettingUpdate(m.chat, 'not_announcement').then((res) => m.reply(`Sukses Membuka Group`)).catch((err) => m.reply(jsonformat(err)))
                 } else {
                 let buttons = [
                         { buttonId: 'group open', buttonText: { displayText: 'Open' }, type: 1 },
                         { buttonId: 'group close', buttonText: { displayText: 'Close' }, type: 1 }
                     ]
-                    await danzz.sendButtonText(m.chat, buttons, `Mode Group`, danzz.user.name, m)
+                    await abot.sendButtonText(m.chat, buttons, `Mode Group`, abot.user.name, m)
 
              }
             }
@@ -1193,15 +1193,15 @@ break
                 if (!isBotAdmins) throw mess.botAdmin
                 if (!isAdmins) throw mess.admin
              if (args[0] === 'open'){
-                await danzz.groupSettingUpdate(m.chat, 'unlocked').then((res) => m.reply(`Sukses Membuka Edit Info Group`)).catch((err) => m.reply(jsonformat(err)))
+                await abot.groupSettingUpdate(m.chat, 'unlocked').then((res) => m.reply(`Sukses Membuka Edit Info Group`)).catch((err) => m.reply(jsonformat(err)))
              } else if (args[0] === 'close'){
-                await danzz.groupSettingUpdate(m.chat, 'locked').then((res) => m.reply(`Sukses Menutup Edit Info Group`)).catch((err) => m.reply(jsonformat(err)))
+                await abot.groupSettingUpdate(m.chat, 'locked').then((res) => m.reply(`Sukses Menutup Edit Info Group`)).catch((err) => m.reply(jsonformat(err)))
              } else {
              let buttons = [
                         { buttonId: 'editinfo open', buttonText: { displayText: 'Open' }, type: 1 },
                         { buttonId: 'editinfo close', buttonText: { displayText: 'Close' }, type: 1 }
                     ]
-                    await danzz.sendButtonText(m.chat, buttons, `Mode Edit Info`, danzz.user.name, m)
+                    await abot.sendButtonText(m.chat, buttons, `Mode Edit Info`, abot.user.name, m)
 
             }
             }
@@ -1223,7 +1223,7 @@ break
                         { buttonId: 'antilink on', buttonText: { displayText: 'On' }, type: 1 },
                         { buttonId: 'antilink off', buttonText: { displayText: 'Off' }, type: 1 }
                     ]
-                    await danzz.sendButtonText(m.chat, buttons, `Mode Antilink`, global.wm, m)
+                    await abot.sendButtonText(m.chat, buttons, `Mode Antilink`, global.wm, m)
                 }
              }
              break
@@ -1234,17 +1234,17 @@ break
                 if (args[0] === "on") {
                 if (db.data.chats[m.chat].mute) return m.reply(`Sudah Aktif Sebelumnya`)
                 db.data.chats[m.chat].mute = true
-                m.reply(`${danzz.user.name} telah di mute di group ini !`)
+                m.reply(`${abot.user.name} telah di mute di group ini !`)
                 } else if (args[0] === "off") {
                 if (!db.data.chats[m.chat].mute) return m.reply(`Sudah Tidak Aktif Sebelumnya`)
                 db.data.chats[m.chat].mute = false
-                m.reply(`${danzz.user.name} telah di unmute di group ini !`)
+                m.reply(`${abot.user.name} telah di unmute di group ini !`)
                 } else {
                  let buttons = [
                         { buttonId: 'mute on', buttonText: { displayText: 'On' }, type: 1 },
                         { buttonId: 'mute off', buttonText: { displayText: 'Off' }, type: 1 }
                     ]
-                    await danzz.sendButtonText(m.chat, buttons, `Mute Bot`, danzz.user.name, m)
+                    await abot.sendButtonText(m.chat, buttons, `Mute Bot`, abot.user.name, m)
                 }
              }
              break
@@ -1254,7 +1254,7 @@ break
         if (!isBotAdmins) throw mess.botAdmin
         if (!isAdmins) throw mess.admin
 		let users = m.mentionedJid[0] ? m.mentionedJid : m.quoted ? [m.quoted.sender] : [text.replace(/[^0-9]/g, '')+'@s.whatsapp.net']
-		await danzz.groupParticipantsUpdate(m.chat, users, 'remove').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+		await abot.groupParticipantsUpdate(m.chat, users, 'remove').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 	}
 	break
 	case 'add': {
@@ -1262,7 +1262,7 @@ break
         if (!isBotAdmins) throw mess.botAdmin
         if (!isAdmins) throw mess.admin
 		let users = m.mentionedJid[0] ? m.mentionedJid : m.quoted ? [m.quoted.sender] : [text.replace(/[^0-9]/g, '')+'@s.whatsapp.net']
-		await danzz.groupParticipantsUpdate(m.chat, users, 'add').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+		await abot.groupParticipantsUpdate(m.chat, users, 'add').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 	}
 	break
 	case 'promote': {
@@ -1270,7 +1270,7 @@ break
         if (!isBotAdmins) throw mess.botAdmin
         if (!isAdmins) throw mess.admin
 		let users = m.mentionedJid[0] ? m.mentionedJid : m.quoted ? [m.quoted.sender] : [text.replace(/[^0-9]/g, '')+'@s.whatsapp.net']
-		await danzz.groupParticipantsUpdate(m.chat, users, 'promote').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+		await abot.groupParticipantsUpdate(m.chat, users, 'promote').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 	}
 	break
 	case 'demote': {
@@ -1278,7 +1278,7 @@ break
         if (!isBotAdmins) throw mess.botAdmin
         if (!isAdmins) throw mess.admin
 		let users = m.mentionedJid[0] ? m.mentionedJid : m.quoted ? [m.quoted.sender] : [text.replace(/[^0-9]/g, '')+'@s.whatsapp.net']
-		await danzz.groupParticipantsUpdate(m.chat, users, 'demote').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+		await abot.groupParticipantsUpdate(m.chat, users, 'demote').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 	}
 	break 
                 
@@ -1287,8 +1287,8 @@ break
                 if (!isAdmins) throw mess.admin
                 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
                 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                let media = await danzz.downloadAndSaveMediaMessage(qmsg)
-                await danzz.updateProfilePicture(m.chat, { url: media }).catch((err) => fs.unlinkSync(media))
+                let media = await abot.downloadAndSaveMediaMessage(qmsg)
+                await abot.updateProfilePicture(m.chat, { url: media }).catch((err) => fs.unlinkSync(media))
                 m.reply(mess.success)
                 }
                 break
@@ -1303,14 +1303,14 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                 for (let mem of participants) {
                 teks += `⭔ @${mem.id.split('@')[0]}\n`
                 }
-                danzz.sendMessage(m.chat, { text: teks, mentions: participants.map(a => a.id) }, { quoted: ftroli })
+                abot.sendMessage(m.chat, { text: teks, mentions: participants.map(a => a.id) }, { quoted: ftroli })
                 }
                 break
                 case 'hidetag': {
             if (!m.isGroup) throw mess.group
             if (!isBotAdmins) throw mess.botAdmin
             if (!isAdmins) throw mess.admin
-            danzz.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: ftroli })
+            abot.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: ftroli })
             }
             break
                case 'totag': {
@@ -1318,7 +1318,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                if (!isBotAdmins) throw mess.botAdmin
                if (!isAdmins) throw mess.admin
                if (!m.quoted) throw `Reply pesan dengan caption ${prefix + command}`
-               danzz.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
+               abot.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
                }
                break
                
@@ -1326,14 +1326,14 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
          case 'sticker': case 's': case 'stickergif': case 'sgif': {
            if (/image/.test(mime)) {
            m.reply(mess.wait)
-                let media = await danzz.downloadMediaMessage(qmsg)
-                let encmedia = await danzz.sendImageAsSticker(m.chat, media, m, { packname: global.packname, author: global.author })
+                let media = await abot.downloadMediaMessage(qmsg)
+                let encmedia = await abot.sendImageAsSticker(m.chat, media, m, { packname: global.packname, author: global.author })
                 await fs.unlinkSync(encmedia)
             } else if (/video/.test(mime)) {
             m.reply(mess.wait)
                 if (qmsg.seconds > 11) return m.reply('Maksimal 10 detik!')
-                let media = await danzz.downloadMediaMessage(qmsg)
-                let encmedia = await danzz.sendVideoAsSticker(m.chat, media, m, { packname: global.packname, author: global.author })
+                let media = await abot.downloadMediaMessage(qmsg)
+                let encmedia = await abot.sendVideoAsSticker(m.chat, media, m, { packname: global.packname, author: global.author })
                 await fs.unlinkSync(encmedia)
             } else {
                 m.reply(`Kirim/reply gambar/video/gif dengan caption ${prefix + command}\nDurasi Video/Gif 1-9 Detik`)
@@ -1346,13 +1346,13 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                 if (!teks2) throw `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`
             	m.reply(mess.wait)
                 if (/image/.test(mime)) {
-                    let media = await danzz.downloadMediaMessage(qmsg)
-                    let encmedia = await danzz.sendImageAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
+                    let media = await abot.downloadMediaMessage(qmsg)
+                    let encmedia = await abot.sendImageAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
                     await fs.unlinkSync(encmedia)
                 } else if (/video/.test(mime)) {
                     if ((quoted.msg || quoted).seconds > 11) return m.reply('Maksimal 10 detik!')
-                    let media = await danzz.downloadMediaMessage(qmsg)
-                    let encmedia = await danzz.sendVideoAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
+                    let media = await abot.downloadMediaMessage(qmsg)
+                    let encmedia = await abot.sendVideoAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
                     await fs.unlinkSync(encmedia)
                 } else {
                     throw `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik`
@@ -1381,7 +1381,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
 		if (!emoji2) throw `Example : ${prefix + command} 😅+🤔`
 		let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
 		for (let res of anu.results) {
-		    let encmedia = await danzz.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
+		    let encmedia = await abot.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
 		    await fs.unlinkSync(encmedia)
 		}
 	    }
@@ -1390,14 +1390,14 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
          // Owner Menu
          case 'self': {
                 if (!isOwner) throw mess.owner
-                danzz.public = false
+                abot.public = false
                 m.reply('Self Mode Activate')
             }
             break
             
             case 'public': {
                 if (!isOwner) throw mess.owner
-                danzz.public = true
+                abot.public = true
                 m.reply('Public Mode Activate')
             }
             break
@@ -1406,7 +1406,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                 if (!m.quoted) throw false
                 let { chat, fromMe, id, isBaileys } = m.quoted
                 if (!isBaileys) throw 'Pesan tersebut bukan dikirim oleh bot!'
-                danzz.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
+                abot.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
             }
             break
 
@@ -1480,7 +1480,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
 		    if (m.isBaileys) return
 		    let msgs = global.db.data.database
 		    if (!(budy.toLowerCase() in msgs)) return
-		    danzz.copyNForward(m.chat, msgs[budy.toLowerCase()], true)
+		    abot.copyNForward(m.chat, msgs[budy.toLowerCase()], true)
 		}
     }
 
