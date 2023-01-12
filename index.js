@@ -48,7 +48,7 @@ const { Low, JSONFile } = low
 const mongoDB = require('./lib/mongoDB')
 
 // Get Sessi
-const { state, saveState } = useSingleFileAuthState(`${global.sessionName}.json`)
+const { state, saveState } = useSingleFileAuthState(`./database/${global.sessionName}.json`)
 
 // Console
 listcolor = ['aqua','red','blue','purple','magenta']
