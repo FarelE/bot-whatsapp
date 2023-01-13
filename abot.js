@@ -402,12 +402,6 @@ Limit
 For Group
 For Owner
 
-*MAIN*
-${symbol1} ${prefix}runtime
-${symbol1} ${prefix}statistic
-${symbol1} ${prefix}ping
-${symbol1} ${prefix}testspeed
-
 *FEATURES*
 *OPEN AI BOT*
 ${symbol1} ${prefix}ai [text]
@@ -439,6 +433,7 @@ ${symbol1} ${prefix}hapusvote
 ${symbol1} ${prefix}sticker [image] 
 ${symbol1} ${prefix}stickergif [gif] 
 ${symbol1} ${prefix}stickerwm [image] 
+${symbol1} ${prefix}smeme [image] 
 ${symbol1} ${prefix}emojimix [emoji1+emoji2] 
 
 *OWNER*
