@@ -2,7 +2,7 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 global.APIs = {
-	danzz: '..',
+	abot: '..',
 }
 
 global.APIKeys = {
