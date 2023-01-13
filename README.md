@@ -18,6 +18,7 @@
 - openai
 - group fiture
 - sticker maker img/gif
+- sticker with text meme
 
 ## Social media
 
