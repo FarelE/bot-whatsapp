@@ -1,4 +1,4 @@
-## Example bot whatsaap with open AI
+## Example bot WhatsApp
 
 ## Intalasi
 
@@ -19,6 +19,17 @@
 - group fiture
 - sticker maker img/gif
 - sticker with text meme
+
+## Library Use
+
+- Baileys
+- Open AI
+- Etc
+
+# Thanks for free API
+
+<a href="https://beta.openai.com/account/api-keys">OpenAI</a><br>
+<a href="https://saipulanuar.ga/">KING OF BEAR</a><br>
 
 ## Social media
 

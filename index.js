@@ -156,6 +156,12 @@ abot.ev.on("messages.upsert", async ({ messages, type }) => {
             else if(!messages[0].key.fromMe && pesanMasuk === "makasih"){
                 await abot.sendMessage(noWa, {text: "Sama-sama, senang bekerja sama dengan anda 😊"},{quoted: messages[0] });
             }
+            else if(!messages[0].key.fromMe && pesanMasuk === "oi"){
+                await abot.sendMessage(noWa, {text: "Apa oi oi, cara pakenya ketik .menu"},{quoted: messages[0] });
+            }
+            else if(!messages[0].key.fromMe && pesanMasuk === "p"){
+                await abot.sendMessage(noWa, {text: "p p p p, gasopan banget, ketik aja .menu kalau mau pake 🤬"},{quoted: messages[0] });
+            }
             else return
         }
 

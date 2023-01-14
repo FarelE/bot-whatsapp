@@ -1012,16 +1012,58 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                 }
                break     
             case 'emojimix': {
-		let [emoji1, emoji2] = text.split`+`
-		if (!emoji1) throw `Example : ${prefix + command} 😅+🤔`
-		if (!emoji2) throw `Example : ${prefix + command} 😅+🤔`
-		let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
-		for (let res of anu.results) {
-		    let encmedia = await abot.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
-		    await fs.unlinkSync(encmedia)
-		}
-	    }
-	    break
+                let [emoji1, emoji2] = text.split`+`
+                if (!emoji1) throw `Example : ${prefix + command} 😅+🤔`
+                if (!emoji2) throw `Example : ${prefix + command} 😅+🤔`
+                let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
+                for (let res of anu.results) {
+                    let encmedia = await abot.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
+                    await fs.unlinkSync(encmedia)
+                }
+                }
+            break
+            //Fiture Downloader
+            case 'ytmp3' : {
+                if (!url) throw `Example : ${prefix + command} url`
+                m.reply(mess.waitdl)
+                let ytmp3 = await fetchJson(`https://saipulanuar.ga/api/download/ytmp3?url=${url}`)
+                abot.sendMessage(m.chat, { audio: { url: ytmp3.result.url }, mimetype: 'audio/mpeg', caption: `Done` }, { quoted: m })
+            }
+            break
+
+            case 'tiktokdl' : {
+                if (!url) throw  `masukan command ${prefix + command} url`
+                let ttdl = await fetchJson(`https://saipulanuar.ga/api/download/tiktok?url=${url}`)
+                m.reply(mess.waitdl)
+                abot.sendMessage(m.chat, { video: { url: ttdl.result.video }, mimetype: 'video/mp4', caption: `Done` }, { quoted: m })
+            }
+            break
+
+        //Ai Fiture
+        case 'ai':
+            try {
+                if (setting.keyopenai === 'ISI_APIKEY_OPENAI_DISINI') return reply('Apikey belum diisi\n\nSilahkan isi terlebih dahulu apikeynya di file key.json\n\nApikeynya bisa dibuat di website: https://beta.openai.com/account/api-keys')
+                if (!text) return reply(`Chattingan dengan AI.\nTanyakan apa saja kepada ai dengan cara penggunaan \n\n${prefix}${command} tolong berikan motivasi cinta`)
+                const configuration = new Configuration({
+                    apiKey: setting.keyopenai,
+                });
+                const openai = new OpenAIApi(configuration);
+            
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: text,
+                    temperature: 0.3,
+                    max_tokens: 3000,
+                    top_p: 1.0,
+                    frequency_penalty: 0.0,
+                    presence_penalty: 0.0,
+                });
+                m.reply(`${response.data.choices[0].text}\n\n`)
+            } catch (err) {
+                console.log(err)
+                m.reply('Maaf, sepertinya ada yang error')
+            }
+            break
          
          // Owner Menu
          case 'self': {
@@ -1044,35 +1086,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
                 if (!isBaileys) throw 'Pesan tersebut bukan dikirim oleh bot!'
                 abot.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
             }
-            break
-
-            case 'ai':
-                try {
-                    if (setting.keyopenai === 'ISI_APIKEY_OPENAI_DISINI') return reply('Apikey belum diisi\n\nSilahkan isi terlebih dahulu apikeynya di file key.json\n\nApikeynya bisa dibuat di website: https://beta.openai.com/account/api-keys')
-                    if (!text) return reply(`Chattingan dengan AI.\nTanyakan apa saja kepada ai dengan cara penggunaan \n\n${prefix}${command} tolong berikan motivasi cinta`)
-                    const configuration = new Configuration({
-                        apiKey: setting.keyopenai,
-                    });
-                    const openai = new OpenAIApi(configuration);
-                
-                    const response = await openai.createCompletion({
-                        model: "text-davinci-003",
-                        prompt: text,
-                        temperature: 0.3,
-                        max_tokens: 3000,
-                        top_p: 1.0,
-                        frequency_penalty: 0.0,
-                        presence_penalty: 0.0,
-                    });
-                    m.reply(`${response.data.choices[0].text}\n\n`)
-                } catch (err) {
-                    console.log(err)
-                    m.reply('Maaf, sepertinya ada yang error')
-                }
-                break   
-            case ' ':   
-            if (!text) return reply(`Chattingan dengan AI.\nTanyakan apa saja kepada ai dengan cara penggunaan \n\n${prefix}${command} tolong berikan motivasi cinta`)
-            break
+            break   
 		// End Cmd
 		default:
                 if (budy.startsWith('=>')) {
